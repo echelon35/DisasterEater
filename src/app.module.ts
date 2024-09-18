@@ -7,6 +7,7 @@ import { SeismeController } from './Controllers/seisme.controller';
 import { HttpModule } from '@nestjs/axios';
 import { CloudWatchService } from './Application/cloudwatch.service';
 import { ConfigModule } from '@nestjs/config';
+import { InondationController } from './Controllers/inondation.controller';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
   ],
-  controllers: [AppController, SeismeController],
+  controllers: [AppController, SeismeController, InondationController],
   providers: [AppService, GdacsService, UsgsService, CloudWatchService],
 })
 export class AppModule {}
