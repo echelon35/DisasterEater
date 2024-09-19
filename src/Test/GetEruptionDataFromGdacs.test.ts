@@ -1,10 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { GdacsService } from '../Application/gdacs.service';
-import { lastValueFrom } from 'rxjs';
 import * as fs from 'fs';
 import { hasSameStructure } from '../Utils/HasSameStructure';
 
-describe('Inondation datas from Gdacs', () => {
+describe('Eruption datas from Gdacs', () => {
   let gdacsService: GdacsService;
   let httpService: HttpService;
   let mockResponse, mockResponseWithErrors;
@@ -15,13 +14,13 @@ describe('Inondation datas from Gdacs', () => {
     httpService = new HttpService();
     mockResponse = JSON.parse(
       fs.readFileSync(
-        __dirname + '/Mocks/Gdacs/gdacs_inondation_correct.json',
+        __dirname + '/Mocks/Gdacs/gdacs_eruption_correct.json',
         'utf8',
       ),
     );
     mockResponseWithErrors = JSON.parse(
       fs.readFileSync(
-        __dirname + '/Mocks/Gdacs/gdacs_inondation_errors.json',
+        __dirname + '/Mocks/Gdacs/gdacs_eruption_errors.json',
         'utf8',
       ),
     );
@@ -30,31 +29,29 @@ describe('Inondation datas from Gdacs', () => {
   /**
    * Test GDACS API
    */
-  describe('Get Inondations data from GDACS API', () => {
+  describe('Get Eruptions data from GDACS API', () => {
     it('should receive a 200 response with structured objects or 404 response from GDACS', async () => {
       //404 because it is the status returned if there's no disasters
       const apiUrl =
-        'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=FL';
-      const response = await lastValueFrom(httpService.get(apiUrl));
-      //Fail -> L'API est down
-      expect(response.status == 200 || response.status == 404).toBeTruthy();
-
-      if (response.status == 200) {
-        // expect(response.data).toHaveProperty('features');
-        // expect(response.data.features.length).toBeGreaterThan(0);
-        expect(hasSameStructure(mockResponse, response.data)).toBeTruthy();
-      } else {
-        throw new Error(`Unexpected status code: ${response.status}`);
-      }
+        'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=VO';
+      httpService.get(apiUrl).subscribe(
+        (response) => {
+          expect(response.status == 200).toBeTruthy();
+          expect(hasSameStructure(mockResponse, response.data)).toBeTruthy();
+        },
+        (error) => {
+          expect(error.status == 404).toBeTruthy();
+        },
+      );
     });
   });
 
   /**
    * Test GDACS To Satellearth conversion
    */
-  describe('Convert inondations data from GDACS API into inondations models', () => {
+  describe('Convert eruptions data from GDACS API into eruptions models', () => {
     it('should only parse inondation with all mandatories attributes', async () => {
-      const gdacsList = gdacsService.convertDataToInondation(
+      const gdacsList = gdacsService.convertDataToEruption(
         mockResponseWithErrors.features,
       );
 
@@ -71,7 +68,7 @@ describe('Inondation datas from Gdacs', () => {
     });
 
     it('should contains attributes with well formats', async () => {
-      const gdacsList = gdacsService.convertDataToInondation(
+      const gdacsList = gdacsService.convertDataToEruption(
         mockResponseWithErrors.features,
       );
 

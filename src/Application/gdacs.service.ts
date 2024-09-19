@@ -75,6 +75,16 @@ export class GdacsService {
   convertDataToEruption(volcanoes: any): Eruption[] {
     const volcanoesList: Eruption[] = [];
 
+    //Filter objects without mandatories attributes
+    volcanoes = volcanoes.filter(
+      (item) =>
+        item.geometry != null &&
+        item.properties?.fromdate != null &&
+        item.properties?.todate != null &&
+        item.properties?.polygonlabel != null &&
+        item.properties?.eventtype == 'VO',
+    );
+
     volcanoes
       .filter((item) => item.properties?.polygonlabel === 'Centroid')
       .forEach((element) => {
@@ -82,7 +92,8 @@ export class GdacsService {
         eruption.dernier_releve = new Date(element.properties?.todate + 'Z');
         eruption.premier_releve = new Date(element.properties?.fromdate + 'Z');
         eruption.point = element.geometry;
-        eruption.idSource = element.properties?.eventid;
+        eruption.idSource = element.properties?.eventid?.toString();
+        eruption.sourceId = 'GDACS';
         volcanoesList.push(eruption);
       });
 
