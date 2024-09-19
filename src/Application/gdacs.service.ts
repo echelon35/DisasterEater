@@ -2,8 +2,9 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { Observable, catchError, map } from 'rxjs';
-import { Inondation } from 'src/Domain/Model/inondation.model';
-import { Seisme } from 'src/Domain/Model/seisme.model';
+import { Eruption } from '../Domain/Model/eruption.model';
+import { Inondation } from '../Domain/Model/inondation.model';
+import { Seisme } from '../Domain/Model/seisme.model';
 // import * as moment from 'moment';
 
 @Injectable()
@@ -33,6 +34,16 @@ export class GdacsService {
   convertDataToInondation(floods: any): Inondation[] {
     const inondationList: Inondation[] = [];
 
+    //Filter objects without mandatories attributes
+    floods = floods.filter(
+      (item) =>
+        item.geometry != null &&
+        item.properties?.fromdate != null &&
+        item.properties?.todate != null &&
+        item.properties?.polygonlabel != null &&
+        item.properties?.eventtype == 'FL',
+    );
+
     floods
       .filter((item) => item.properties?.polygonlabel === 'Centroid')
       .forEach((element) => {
@@ -42,7 +53,8 @@ export class GdacsService {
           element.properties?.fromdate + 'Z',
         );
         inondation.point = element.geometry;
-        inondation.idSource = element.properties?.eventid;
+        inondation.idSource = element.properties?.eventid?.toString();
+        inondation.sourceId = 'GDACS';
         inondationList.push(inondation);
       });
 
@@ -58,6 +70,34 @@ export class GdacsService {
       });
 
     return inondationList;
+  }
+
+  convertDataToEruption(volcanoes: any): Eruption[] {
+    const volcanoesList: Eruption[] = [];
+
+    volcanoes
+      .filter((item) => item.properties?.polygonlabel === 'Centroid')
+      .forEach((element) => {
+        const eruption = new Eruption();
+        eruption.dernier_releve = new Date(element.properties?.todate + 'Z');
+        eruption.premier_releve = new Date(element.properties?.fromdate + 'Z');
+        eruption.point = element.geometry;
+        eruption.idSource = element.properties?.eventid;
+        volcanoesList.push(eruption);
+      });
+
+    //Surface associated
+    volcanoes
+      .filter((item) => item.properties?.polygonlabel === 'OBS')
+      .forEach((element) => {
+        for (const obj of volcanoesList) {
+          if (obj.idSource == element.properties?.eventid) {
+            obj.surface = element.geometry;
+          }
+        }
+      });
+
+    return volcanoesList;
   }
 
   getEarthquakeData(): Observable<AxiosResponse<any>> {
@@ -85,6 +125,40 @@ export class GdacsService {
         const data = response.data;
         const floods = data.features || [];
         return floods;
+      }),
+      catchError((error) => {
+        throw new Error(
+          `Erreur lors de la récupération des données GDACS : ${error.message}`,
+        );
+      }),
+    );
+  }
+
+  getCycloneData(): Observable<AxiosResponse<any>> {
+    const apiUrl =
+      'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=TC';
+    return this.httpService.get(apiUrl).pipe(
+      map((response: AxiosResponse) => {
+        const data = response.data;
+        const cyclones = data.features || [];
+        return cyclones;
+      }),
+      catchError((error) => {
+        throw new Error(
+          `Erreur lors de la récupération des données GDACS : ${error.message}`,
+        );
+      }),
+    );
+  }
+
+  getEruptionData(): Observable<AxiosResponse<any>> {
+    const apiUrl =
+      'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=VO';
+    return this.httpService.get(apiUrl).pipe(
+      map((response: AxiosResponse) => {
+        const data = response.data;
+        const volcanoes = data.features || [];
+        return volcanoes;
       }),
       catchError((error) => {
         throw new Error(

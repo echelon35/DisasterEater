@@ -1,0 +1,56 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "bbox": [5.6166523, 6.4166789, 5.6166523, 6.4166789],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [5.6166523, 6.4166789]
+      },
+      "properties": {
+        "eventtype": "FL",
+        "eventid": 1102720,
+        "episodeid": 23,
+        "eventname": "",
+        "glide": "",
+        "name": "Flood in Nigeria",
+        "description": "Flood in Nigeria",
+        "htmldescription": "Green Flood in Nigeria from: 23 Jun 2024 01 to: 16 Sep 2024 01.",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/FL.png",
+        "iconoverall": null,
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=FL&eventid=1102720&episodeid=23",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1102720&episodeid=23&eventtype=FL",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=FL&eventid=1102720"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 0.5,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "Nigeria",
+        "fromdate": "2024-06-23T01:00:00",
+        "todate": "2024-09-16T01:00:00",
+        "datemodified": "2024-09-17T08:25:18",
+        "iso3": "NGA",
+        "source": "GLOFAS",
+        "sourceid": "e9beb114-2d97-4217-9d0f-fa3abfc79df5",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "affectedcountries": [
+          {
+            "iso3": "NGA",
+            "countryname": "Nigeria"
+          }
+        ],
+        "severitydata": {
+          "severity": 0,
+          "severitytext": "Magnitude 0 ",
+          "severityunit": ""
+        }
+      }
+    }
+  ]
+}

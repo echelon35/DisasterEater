@@ -3,20 +3,18 @@ import { GdacsService } from '../Application/gdacs.service';
 import { lastValueFrom } from 'rxjs';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
 
-@Controller('inondation')
-export class InondationController {
+@Controller('cyclone')
+export class CycloneController {
   constructor(
     private readonly gdacsService: GdacsService,
     private readonly cloudWatchService: CloudWatchService,
   ) {}
 
   @Get('data')
-  async getAllInondationData() {
+  async getAllCycloneData() {
     //GDACS
-    const gdacsData = await lastValueFrom(
-      this.gdacsService.getInondationData(),
-    );
-    const gdacsList = this.gdacsService.convertDataToInondation(gdacsData);
+    const gdacsData = await lastValueFrom(this.gdacsService.getCycloneData());
+    const gdacsList = this.gdacsService.convertDataToEruption(gdacsData);
 
     // Combine
     const combinedData = {
@@ -25,7 +23,7 @@ export class InondationController {
 
     // Loguer les données ajoutées à la base dans CloudWatch
     gdacsList.forEach(async (item) => {
-      const logMessage = `Nouvel événement ajouté: Inondation à ${item.dernier_releve}}`;
+      const logMessage = `Nouvel événement ajouté: Eruption ${item.nom} à ${item.dernier_releve}}`;
       await this.cloudWatchService.logToCloudWatch(logMessage);
     });
 
