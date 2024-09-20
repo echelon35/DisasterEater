@@ -1,0 +1,85 @@
+{
+    "type": "FeatureCollection",
+    "metadata": {
+      "generated": 1726863772000,
+      "url": "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&minmagnitude=4",
+      "title": "USGS Earthquakes",
+      "status": 200,
+      "api": "1.14.1",
+      "count": 585
+    },
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "mag": 4.9,
+          "place": "Volcano Islands, Japan region",
+          "time": 1726853483709,
+          "updated": 1726857135040,
+          "tz": null,
+          "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000ntca",
+          "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000ntca&format=geojson",
+          "felt": null,
+          "cdi": null,
+          "mmi": null,
+          "alert": null,
+          "status": "reviewed",
+          "tsunami": 0,
+          "sig": 369,
+          "net": "us",
+          "code": "6000ntca",
+          "ids": ",us6000ntca,",
+          "sources": ",us,",
+          "types": ",origin,phase-data,",
+          "nst": 119,
+          "dmin": 5.393,
+          "rms": 0.63,
+          "gap": 83,
+          "magType": "mb",
+          "type": "earthquake",
+          "title": "M 4.9 - Volcano Islands, Japan region"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [144.3618, 22.0571, 54.97]
+        },
+        "id": "us6000ntca"
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "mag": 4.7,
+          "place": "South Sandwich Islands region",
+          "time": 1726851728998,
+          "updated": 1726859743040,
+          "tz": null,
+          "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us6000ntcq",
+          "detail": "https://earthquake.usgs.gov/fdsnws/event/1/query?eventid=us6000ntcq&format=geojson",
+          "felt": null,
+          "cdi": null,
+          "mmi": null,
+          "alert": null,
+          "status": "reviewed",
+          "tsunami": 0,
+          "sig": 340,
+          "net": "us",
+          "code": "6000ntcq",
+          "ids": ",us6000ntcq,",
+          "sources": ",us,",
+          "types": ",origin,phase-data,",
+          "nst": 53,
+          "dmin": 7.083,
+          "rms": 0.6,
+          "gap": 69,
+          "magType": "mb",
+          "type": "earthquake",
+          "title": "M 4.7 - South Sandwich Islands region"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-25.6305, -57.9268, 91.488]
+        },
+        "id": "us6000ntcq"
+      }
+    ]
+}

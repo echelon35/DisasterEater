@@ -5,6 +5,7 @@ import { Observable, catchError, map } from 'rxjs';
 import { Eruption } from '../Domain/Model/eruption.model';
 import { Inondation } from '../Domain/Model/inondation.model';
 import { Seisme } from '../Domain/Model/seisme.model';
+import { Cyclone } from '../Domain/Model/cyclone.model';
 // import * as moment from 'moment';
 
 @Injectable()
@@ -38,6 +39,7 @@ export class GdacsService {
     floods = floods.filter(
       (item) =>
         item.geometry != null &&
+        item.properties?.eventid != null &&
         item.properties?.fromdate != null &&
         item.properties?.todate != null &&
         item.properties?.polygonlabel != null &&
@@ -80,6 +82,7 @@ export class GdacsService {
       (item) =>
         item.geometry != null &&
         item.properties?.fromdate != null &&
+        item.properties?.eventid != null &&
         item.properties?.todate != null &&
         item.properties?.polygonlabel != null &&
         item.properties?.eventtype == 'VO',
@@ -111,14 +114,56 @@ export class GdacsService {
     return volcanoesList;
   }
 
-  getEarthquakeData(): Observable<AxiosResponse<any>> {
+  convertDataToCyclone(hurricanes: any): Cyclone[] {
+    const hurricanesList: Cyclone[] = [];
+
+    //Filter objects without mandatories attributes
+    hurricanes = hurricanes.filter(
+      (item) =>
+        item.geometry != null &&
+        item.properties?.eventid != null &&
+        item.properties?.eventname != null &&
+        item.properties?.fromdate != null &&
+        item.properties?.todate != null &&
+        item.properties?.polygonlabel != null &&
+        item.properties?.eventtype == 'TC',
+    );
+
+    hurricanes
+      .filter((item) => item.properties?.polygonlabel === 'Centroid')
+      .forEach((element) => {
+        const cyclone = new Cyclone();
+        cyclone.dernier_releve = new Date(element.properties?.todate + 'Z');
+        cyclone.premier_releve = new Date(element.properties?.fromdate + 'Z');
+        cyclone.point = element.geometry;
+        cyclone.idSource = element.properties?.eventid?.toString();
+        cyclone.sourceId = 'GDACS';
+        hurricanesList.push(cyclone);
+      });
+
+    //Surface associated
+    hurricanes
+      .filter((item) => item.properties?.polygonlabel === 'OBS')
+      .forEach((element) => {
+        for (const obj of hurricanesList) {
+          if (obj.idSource == element.properties?.eventid) {
+            obj.surface = element.geometry;
+          }
+        }
+      });
+
+    return hurricanesList;
+  }
+
+  getEarthquakeData(): Observable<Seisme[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=EQ';
+
     return this.httpService.get(apiUrl).pipe(
       map((response: AxiosResponse) => {
         const data = response.data;
-        const earthquakes = data.features || [];
-        return earthquakes;
+        const seismes = data.features || [];
+        return this.convertDataToSeisme(seismes);
       }),
       catchError((error) => {
         throw new Error(
@@ -128,31 +173,15 @@ export class GdacsService {
     );
   }
 
-  getInondationData(): Observable<AxiosResponse<any>> {
-    const apiUrl =
-      'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=FL';
-    return this.httpService.get(apiUrl).pipe(
-      map((response: AxiosResponse) => {
-        const data = response.data;
-        const floods = data.features || [];
-        return floods;
-      }),
-      catchError((error) => {
-        throw new Error(
-          `Erreur lors de la récupération des données GDACS : ${error.message}`,
-        );
-      }),
-    );
-  }
-
-  getCycloneData(): Observable<AxiosResponse<any>> {
+  getCycloneData(): Observable<Cyclone[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=TC';
+
     return this.httpService.get(apiUrl).pipe(
       map((response: AxiosResponse) => {
         const data = response.data;
-        const cyclones = data.features || [];
-        return cyclones;
+        const hurricanes = data.features || [];
+        return this.convertDataToCyclone(hurricanes);
       }),
       catchError((error) => {
         throw new Error(
@@ -162,14 +191,33 @@ export class GdacsService {
     );
   }
 
-  getEruptionData(): Observable<AxiosResponse<any>> {
+  getEruptionData(): Observable<Eruption[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=VO';
+
     return this.httpService.get(apiUrl).pipe(
       map((response: AxiosResponse) => {
         const data = response.data;
         const volcanoes = data.features || [];
-        return volcanoes;
+        return this.convertDataToEruption(volcanoes);
+      }),
+      catchError((error) => {
+        throw new Error(
+          `Erreur lors de la récupération des données GDACS : ${error.message}`,
+        );
+      }),
+    );
+  }
+
+  getInondationData(): Observable<Inondation[]> {
+    const apiUrl =
+      'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=FL';
+
+    return this.httpService.get(apiUrl).pipe(
+      map((response: AxiosResponse) => {
+        const data = response.data;
+        const floods = data.features || [];
+        return this.convertDataToInondation(floods);
       }),
       catchError((error) => {
         throw new Error(

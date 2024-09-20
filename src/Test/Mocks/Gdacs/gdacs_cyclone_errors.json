@@ -1,0 +1,380 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "testcase": "Missing Geometry",
+      "type": "Feature",
+      "bbox": [-49.1, 19.5, -49.1, 19.5],
+      "properties": {
+        "eventtype": "TC",
+        "eventid": 1001094,
+        "episodeid": 25,
+        "eventname": "GORDON-24",
+        "glide": "",
+        "name": "Tropical Cyclone GORDON-24",
+        "description": "Tropical Cyclone GORDON-24",
+        "htmldescription": "Green Tropical Cyclone GORDON-24 off-shore from: 11 Sep 2024  to: 17 Sep 2024 .",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/TC.png",
+        "iconoverall": null,
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=TC&eventid=1001094&episodeid=25",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1001094&episodeid=25&eventtype=TC",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=TC&eventid=1001094"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 1,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "",
+        "fromdate": "2024-09-11T15:00:00",
+        "todate": "2024-09-17T15:00:00",
+        "datemodified": "2024-09-18T11:20:10",
+        "iso3": "",
+        "source": "NOAA",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "countryonland": "",
+        "affectedcountries": [],
+        "severitydata": {
+          "severity": 74.0736,
+          "severitytext": "Tropical Depression (maximum wind speed of 74 km/h)",
+          "severityunit": "km/h"
+        }
+      }
+    },
+    {
+      "testcase":"Wrong event type",
+      "type": "Feature",
+      "bbox": [-49.1, 19.5, -49.1, 19.5],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-49.1, 19.5]
+      },
+      "properties": {
+        "eventtype": "FL",
+        "eventid": 1001094,
+        "episodeid": 25,
+        "eventname": "GORDON-24",
+        "glide": "",
+        "name": "Tropical Cyclone GORDON-24",
+        "description": "Tropical Cyclone GORDON-24",
+        "htmldescription": "Green Tropical Cyclone GORDON-24 off-shore from: 11 Sep 2024  to: 17 Sep 2024 .",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/TC.png",
+        "iconoverall": null,
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=TC&eventid=1001094&episodeid=25",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1001094&episodeid=25&eventtype=TC",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=TC&eventid=1001094"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 1,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "",
+        "fromdate": "2024-09-11T15:00:00",
+        "todate": "2024-09-17T15:00:00",
+        "datemodified": "2024-09-18T11:20:10",
+        "iso3": "",
+        "source": "NOAA",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "countryonland": "",
+        "affectedcountries": [],
+        "severitydata": {
+          "severity": 74.0736,
+          "severitytext": "Tropical Depression (maximum wind speed of 74 km/h)",
+          "severityunit": "km/h"
+        }
+      }
+    },
+    {
+      "testcase":"Missing fromdate",
+      "type": "Feature",
+      "bbox": [-49.1, 19.5, -49.1, 19.5],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-49.1, 19.5]
+      },
+      "properties": {
+        "eventtype": "TC",
+        "eventid": 1001094,
+        "episodeid": 25,
+        "eventname": "GORDON-24",
+        "glide": "",
+        "name": "Tropical Cyclone GORDON-24",
+        "description": "Tropical Cyclone GORDON-24",
+        "htmldescription": "Green Tropical Cyclone GORDON-24 off-shore from: 11 Sep 2024  to: 17 Sep 2024 .",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/TC.png",
+        "iconoverall": null,
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=TC&eventid=1001094&episodeid=25",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1001094&episodeid=25&eventtype=TC",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=TC&eventid=1001094"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 1,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "",
+        "todate": "2024-09-17T15:00:00",
+        "datemodified": "2024-09-18T11:20:10",
+        "iso3": "",
+        "source": "NOAA",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "countryonland": "",
+        "affectedcountries": [],
+        "severitydata": {
+          "severity": 74.0736,
+          "severitytext": "Tropical Depression (maximum wind speed of 74 km/h)",
+          "severityunit": "km/h"
+        }
+      }
+    },
+    {
+      "testcase": "Missing todate",
+      "type": "Feature",
+      "bbox": [-49.1, 19.5, -49.1, 19.5],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-49.1, 19.5]
+      },
+      "properties": {
+        "eventtype": "TC",
+        "eventid": 1001094,
+        "episodeid": 25,
+        "eventname": "GORDON-24",
+        "glide": "",
+        "name": "Tropical Cyclone GORDON-24",
+        "description": "Tropical Cyclone GORDON-24",
+        "htmldescription": "Green Tropical Cyclone GORDON-24 off-shore from: 11 Sep 2024  to: 17 Sep 2024 .",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/TC.png",
+        "iconoverall": null,
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=TC&eventid=1001094&episodeid=25",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1001094&episodeid=25&eventtype=TC",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=TC&eventid=1001094"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 1,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "",
+        "fromdate": "2024-09-11T15:00:00",
+        "datemodified": "2024-09-18T11:20:10",
+        "iso3": "",
+        "source": "NOAA",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "countryonland": "",
+        "affectedcountries": [],
+        "severitydata": {
+          "severity": 74.0736,
+          "severitytext": "Tropical Depression (maximum wind speed of 74 km/h)",
+          "severityunit": "km/h"
+        }
+      }
+    },
+    {
+      "testcase":"Complete object",
+      "type": "Feature",
+      "bbox": [-49.1, 19.5, -49.1, 19.5],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-49.1, 19.5]
+      },
+      "properties": {
+        "eventtype": "TC",
+        "eventid": 99999,
+        "episodeid": 25,
+        "eventname": "GORDON-24",
+        "glide": "",
+        "name": "Tropical Cyclone GORDON-24",
+        "description": "Tropical Cyclone GORDON-24",
+        "htmldescription": "Green Tropical Cyclone GORDON-24 off-shore from: 11 Sep 2024  to: 17 Sep 2024 .",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/TC.png",
+        "iconoverall": null,
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=TC&eventid=1001094&episodeid=25",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1001094&episodeid=25&eventtype=TC",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=TC&eventid=1001094"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 1,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "",
+        "fromdate": "2024-05-18T15:00:00",
+        "todate": "2024-09-17T15:00:00",
+        "datemodified": "2024-09-18T11:20:10",
+        "iso3": "",
+        "source": "NOAA",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "countryonland": "",
+        "affectedcountries": [],
+        "severitydata": {
+          "severity": 74.0736,
+          "severitytext": "Tropical Depression (maximum wind speed of 74 km/h)",
+          "severityunit": "km/h"
+        }
+      }
+    },
+    {
+      "testcase": "Missing polygonlabel",
+      "type": "Feature",
+      "bbox": [-49.1, 19.5, -49.1, 19.5],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-49.1, 19.5]
+      },
+      "properties": {
+        "eventtype": "TC",
+        "eventid": 1001094,
+        "episodeid": 25,
+        "eventname": "GORDON-24",
+        "glide": "",
+        "name": "Tropical Cyclone GORDON-24",
+        "description": "Tropical Cyclone GORDON-24",
+        "htmldescription": "Green Tropical Cyclone GORDON-24 off-shore from: 11 Sep 2024  to: 17 Sep 2024 .",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/TC.png",
+        "iconoverall": null,
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=TC&eventid=1001094&episodeid=25",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1001094&episodeid=25&eventtype=TC",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=TC&eventid=1001094"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 1,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "",
+        "fromdate": "2024-09-11T15:00:00",
+        "todate": "2024-09-17T15:00:00",
+        "datemodified": "2024-09-18T11:20:10",
+        "iso3": "",
+        "source": "NOAA",
+        "sourceid": "",
+        "Class": "Point_Centroid",
+        "countryonland": "",
+        "affectedcountries": [],
+        "severitydata": {
+          "severity": 74.0736,
+          "severitytext": "Tropical Depression (maximum wind speed of 74 km/h)",
+          "severityunit": "km/h"
+        }
+      }
+    },
+    {
+      "testcase": "Missing event id",
+      "type": "Feature",
+      "bbox": [-49.1, 19.5, -49.1, 19.5],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-49.1, 19.5]
+      },
+      "properties": {
+        "eventtype": "TC",
+        "episodeid": 25,
+        "eventname": "GORDON-24",
+        "glide": "",
+        "name": "Tropical Cyclone GORDON-24",
+        "description": "Tropical Cyclone GORDON-24",
+        "htmldescription": "Green Tropical Cyclone GORDON-24 off-shore from: 11 Sep 2024  to: 17 Sep 2024 .",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/TC.png",
+        "iconoverall": null,
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=TC&eventid=1001094&episodeid=25",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1001094&episodeid=25&eventtype=TC",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=TC&eventid=1001094"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 1,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "",
+        "fromdate": "2024-05-18T15:00:00",
+        "todate": "2024-09-17T15:00:00",
+        "datemodified": "2024-09-18T11:20:10",
+        "iso3": "",
+        "source": "NOAA",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "countryonland": "",
+        "affectedcountries": [],
+        "severitydata": {
+          "severity": 74.0736,
+          "severitytext": "Tropical Depression (maximum wind speed of 74 km/h)",
+          "severityunit": "km/h"
+        }
+      }
+    },
+    {
+      "testcase": "Missing event name",
+      "type": "Feature",
+      "bbox": [-49.1, 19.5, -49.1, 19.5],
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-49.1, 19.5]
+      },
+      "properties": {
+        "eventtype": "TC",
+        "eventid": 1001094,
+        "episodeid": 25,
+        "glide": "",
+        "name": "Tropical Cyclone GORDON-24",
+        "description": "Tropical Cyclone GORDON-24",
+        "htmldescription": "Green Tropical Cyclone GORDON-24 off-shore from: 11 Sep 2024  to: 17 Sep 2024 .",
+        "icon": "https://www.gdacs.org/images/gdacs_icons/maps/Green/TC.png",
+        "iconoverall": null,
+        "url": {
+          "geometry": "https://www.gdacs.org/gdacsapi/api/polygons/getgeometry?eventtype=TC&eventid=1001094&episodeid=25",
+          "report": "https://www.gdacs.org/report.aspx?eventid=1001094&episodeid=25&eventtype=TC",
+          "details": "https://www.gdacs.org/gdacsapi/api/events/geteventdata?eventtype=TC&eventid=1001094"
+        },
+        "alertlevel": "Green",
+        "alertscore": 1,
+        "episodealertlevel": "Green",
+        "episodealertscore": 1,
+        "istemporary": "false",
+        "iscurrent": "true",
+        "country": "",
+        "fromdate": "2024-05-18T15:00:00",
+        "todate": "2024-09-17T15:00:00",
+        "datemodified": "2024-09-18T11:20:10",
+        "iso3": "",
+        "source": "NOAA",
+        "sourceid": "",
+        "polygonlabel": "Centroid",
+        "Class": "Point_Centroid",
+        "countryonland": "",
+        "affectedcountries": [],
+        "severitydata": {
+          "severity": 74.0736,
+          "severitytext": "Tropical Depression (maximum wind speed of 74 km/h)",
+          "severityunit": "km/h"
+        }
+      }
+    }
+  ]
+}

@@ -23,7 +23,7 @@ export class CycloneController {
 
     // Loguer les données ajoutées à la base dans CloudWatch
     gdacsList.forEach(async (item) => {
-      const logMessage = `Nouvel événement ajouté: Eruption ${item.nom} à ${item.dernier_releve}}`;
+      const logMessage = `Nouvel événement ajouté: Cyclone ${item.nom} à ${item.dernier_releve}}`;
       await this.cloudWatchService.logToCloudWatch(logMessage);
     });
 

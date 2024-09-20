@@ -1,7 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { GdacsService } from '../Application/gdacs.service';
-import { lastValueFrom } from 'rxjs';
+import { forkJoin, map, Observable } from 'rxjs';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
+import { Inondation } from 'src/Domain/Model/inondation.model';
 
 @Controller('inondation')
 export class InondationController {
@@ -11,24 +12,22 @@ export class InondationController {
   ) {}
 
   @Get('data')
-  async getAllInondationData() {
-    //GDACS
-    const gdacsData = await lastValueFrom(
-      this.gdacsService.getInondationData(),
+  getAllInondationData(): Observable<Inondation[]> {
+    return forkJoin({
+      gdacs: this.gdacsService.getInondationData(),
+    }).pipe(
+      map((results) => {
+        // Combine results from both sources
+        const combinedData = [...results.gdacs];
+
+        // Loguer les données ajoutées à la base dans CloudWatch
+        combinedData.forEach(async (item) => {
+          const logMessage = `Nouvel événement ajouté: Inondation à ${item.dernier_releve}}`;
+          await this.cloudWatchService.logToCloudWatch(logMessage);
+        });
+
+        return combinedData;
+      }),
     );
-    const gdacsList = this.gdacsService.convertDataToInondation(gdacsData);
-
-    // Combine
-    const combinedData = {
-      gdacs: gdacsList,
-    };
-
-    // Loguer les données ajoutées à la base dans CloudWatch
-    gdacsList.forEach(async (item) => {
-      const logMessage = `Nouvel événement ajouté: Inondation à ${item.dernier_releve}}`;
-      await this.cloudWatchService.logToCloudWatch(logMessage);
-    });
-
-    return combinedData;
   }
 }

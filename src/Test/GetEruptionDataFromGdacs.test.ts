@@ -34,15 +34,15 @@ describe('Eruption datas from Gdacs', () => {
       //404 because it is the status returned if there's no disasters
       const apiUrl =
         'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=VO';
-      httpService.get(apiUrl).subscribe(
-        (response) => {
+      httpService.get(apiUrl).subscribe({
+        next: (response) => {
           expect(response.status == 200).toBeTruthy();
           expect(hasSameStructure(mockResponse, response.data)).toBeTruthy();
         },
-        (error) => {
+        error: (error) => {
           expect(error.status == 404).toBeTruthy();
         },
-      );
+      });
     });
   });
 
@@ -56,13 +56,10 @@ describe('Eruption datas from Gdacs', () => {
       );
 
       //The only object created is the one with all its properties
-      expect(gdacsList.length).toBe(2);
+      expect(gdacsList.length).toBe(1);
 
       //Check sourceId to be sure they're the good test cases
       expect(gdacsList[0].premier_releve).toStrictEqual(
-        new Date('2024-05-18T12:00:00Z'),
-      );
-      expect(gdacsList[1].premier_releve).toStrictEqual(
         new Date('2024-05-18T12:00:00Z'),
       );
     });
