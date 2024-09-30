@@ -9,10 +9,20 @@ import { CloudWatchService } from './Application/cloudwatch.service';
 import { ConfigModule } from '@nestjs/config';
 import { InondationController } from './Controllers/inondation.controller';
 import { EruptionController } from './Controllers/eruption.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
     HttpModule,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DISASTER_EATER_DB_HOST,
+      port: parseInt(process.env.DISASTER_EATER_DB_PORT),
+      username: process.env.DISASTER_EATER_DB_USER,
+      password: process.env.DISASTER_EATER_DB_PASSWORD,
+      database: process.env.DISASTER_EATER_DB_NAME,
+      autoLoadEntities: true,
+    }),
     ConfigModule.forRoot({
       envFilePath: './.env',
       isGlobal: true,
