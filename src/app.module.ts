@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GdacsService } from './Application/gdacs.service';
 import { UsgsService } from './Application/usgs.service';
-import { SeismeController } from './Controllers/seisme.controller';
+import { EarthquakeController } from './Controllers/earthquake.controller';
 import { HttpModule } from '@nestjs/axios';
 import { CloudWatchService } from './Application/cloudwatch.service';
 import { ConfigModule } from '@nestjs/config';
@@ -22,6 +22,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: process.env.DISASTER_EATER_DB_PASSWORD,
       database: process.env.DISASTER_EATER_DB_NAME,
       autoLoadEntities: true,
+      synchronize: true,
     }),
     ConfigModule.forRoot({
       envFilePath: './.env',
@@ -30,7 +31,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   ],
   controllers: [
     AppController,
-    SeismeController,
+    EarthquakeController,
     InondationController,
     EruptionController,
   ],

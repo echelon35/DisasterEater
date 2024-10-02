@@ -4,8 +4,8 @@ import { UsgsService } from '../Application/usgs.service';
 import { lastValueFrom } from 'rxjs';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
 
-@Controller('seisme')
-export class SeismeController {
+@Controller('earthquake')
+export class EarthquakeController {
   constructor(
     private readonly gdacsService: GdacsService,
     private readonly usgsService: UsgsService,

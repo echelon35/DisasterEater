@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 import { Observable, catchError, map } from 'rxjs';
-import { Seisme } from 'src/Domain/Model/seisme.model';
+import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import * as moment from 'moment';
 
 @Injectable()
@@ -14,30 +14,30 @@ export class UsgsService {
    * @param earthquakes
    * @returns
    */
-  convertDataToSeisme(earthquakes: any): Seisme[] {
-    const seismeList: Seisme[] = [];
+  convertDataToSeisme(earthquakes: any): Earthquake[] {
+    const seismeList: Earthquake[] = [];
 
     earthquakes.forEach((element: any) => {
-      const seisme = new Seisme();
-      seisme.dernier_releve = new Date(
+      const earthquake = new Earthquake();
+      earthquake.dernier_releve = new Date(
         moment.unix(element.properties?.time / 1000).format(),
       );
-      seisme.premier_releve = new Date(
+      earthquake.premier_releve = new Date(
         moment.unix(element.properties?.time / 1000).format(),
       );
-      seisme.magnitude = element.properties?.mag;
-      seisme.idSource = element.id;
-      seisme.nb_ressenti = element.properties?.felt;
-      seisme.point = {
+      earthquake.magnitude = element.properties?.mag;
+      earthquake.idSource = element.id;
+      earthquake.nb_ressenti = element.properties?.felt;
+      earthquake.point = {
         type: 'Point',
         coordinates: [
           element.geometry.coordinates[0],
           element.geometry.coordinates[1],
         ],
       };
-      seisme.type_magnitude = element.properties?.magtype;
-      seisme.sourceId = 'USGS';
-      seismeList.push(seisme);
+      earthquake.type_magnitude = element.properties?.magtype;
+      earthquake.sourceId = 'USGS';
+      seismeList.push(earthquake);
     });
 
     return seismeList;
@@ -47,7 +47,7 @@ export class UsgsService {
    * Get the datas from the USGS API
    * @returns data from API
    */
-  getEarthquakeData(): Observable<AxiosResponse<Seisme>> {
+  getEarthquakeData(): Observable<AxiosResponse<Earthquake>> {
     const magnitudeMin = 3;
     const today = new Date();
 

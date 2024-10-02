@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios';
 import { Observable, catchError, map } from 'rxjs';
 import { Eruption } from '../Domain/Model/eruption.model';
 import { Inondation } from '../Domain/Model/inondation.model';
-import { Seisme } from '../Domain/Model/seisme.model';
+import { Earthquake } from '../Domain/Model/earthquake.model';
 import { Cyclone } from '../Domain/Model/cyclone.model';
 // import * as moment from 'moment';
 
@@ -12,13 +12,13 @@ import { Cyclone } from '../Domain/Model/cyclone.model';
 export class GdacsService {
   constructor(private readonly httpService: HttpService) {}
 
-  convertDataToSeisme(earthquakes: any): Seisme[] {
-    const seismeList: Seisme[] = [];
+  convertDataToSeisme(earthquakes: any): Earthquake[] {
+    const seismeList: Earthquake[] = [];
 
     earthquakes
       .filter((item) => item.geometry.type == 'Point')
       .forEach((element) => {
-        const seisme = new Seisme();
+        const seisme = new Earthquake();
         seisme.dernier_releve = new Date(element.properties?.todate + 'Z');
         seisme.premier_releve = new Date(element.properties?.fromdate + 'Z');
         seisme.magnitude = element.properties?.severitydata?.severity;
@@ -155,7 +155,7 @@ export class GdacsService {
     return hurricanesList;
   }
 
-  getEarthquakeData(): Observable<Seisme[]> {
+  getEarthquakeData(): Observable<Earthquake[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=EQ';
 

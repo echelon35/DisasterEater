@@ -2,9 +2,7 @@ import { Point } from 'geojson';
 import { Ville } from './ville.model';
 import { Source } from './source.model';
 import { Alea } from './alea.model';
-import { Entity } from 'typeorm';
 
-@Entity({ name: 'disasters' })
 export class Disaster {
   alea: Alea;
   //Dates in UTC format
