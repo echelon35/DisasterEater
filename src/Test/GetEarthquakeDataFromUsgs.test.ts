@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import * as fs from 'fs';
 import { hasSameStructure } from '../Utils/HasSameStructure';
 
-describe('Seisme datas from USGS', () => {
+describe('Earthquake datas from USGS', () => {
   //   let usgsService: UsgsService;
   let httpService: HttpService;
   let mockResponse;
@@ -20,7 +20,7 @@ describe('Seisme datas from USGS', () => {
     );
   });
 
-  describe('Get seisme data from USGS API', () => {
+  describe('Get Earthquake data from USGS API', () => {
     it('should receive a 200 response with structured objects or 404 response from GDACS', async () => {
       const apiUrl = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson`;
       httpService.get(apiUrl).subscribe({
@@ -33,6 +33,6 @@ describe('Seisme datas from USGS', () => {
         },
       });
     });
-    it('Convert seismes data from USGS API into seismes models', async () => {});
+    it('Convert Earthquakes data from USGS API into Earthquakes models', async () => {});
   });
 });

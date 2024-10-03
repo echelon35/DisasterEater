@@ -9,6 +9,8 @@ import { Source } from './Domain/Model/source.model';
 import { EarthquakeModule } from './Modules/earthquake/earthquake.module';
 import { FloodModule } from './Modules/flood/flood.module';
 import { Flood } from './Domain/Model/flood.model';
+import { Hurricane } from './Domain/Model/hurricane.model';
+import { HurricaneModule } from './Modules/hurricane.module';
 
 @Module({
   imports: [
@@ -23,12 +25,13 @@ import { Flood } from './Domain/Model/flood.model';
       username: process.env.DISASTER_EATER_DB_USER,
       password: process.env.DISASTER_EATER_DB_PASSWORD,
       database: process.env.DISASTER_EATER_DB_NAME,
-      entities: [Alea, Earthquake, Source, Flood],
+      entities: [Alea, Earthquake, Source, Flood, Hurricane],
       synchronize: true,
       schema: 'public',
     }),
     EarthquakeModule,
     FloodModule,
+    HurricaneModule,
   ],
   controllers: [AppController],
   providers: [AppService],

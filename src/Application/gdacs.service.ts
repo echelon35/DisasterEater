@@ -5,9 +5,9 @@ import { Observable, catchError, map } from 'rxjs';
 import { Eruption } from '../Domain/Model/eruption.model';
 import { Flood } from '../Domain/Model/flood.model';
 import { Earthquake } from '../Domain/Model/earthquake.model';
-import { Cyclone } from '../Domain/Model/cyclone.model';
 import { SourceService } from './source.service';
 import { Source } from 'src/Domain/Model/source.model';
+import { Hurricane } from 'src/Domain/Model/hurricane.model';
 // import * as moment from 'moment';
 
 @Injectable()
@@ -132,8 +132,8 @@ export class GdacsService {
     return volcanoesList;
   }
 
-  convertDataToCyclone(hurricanes: any): Cyclone[] {
-    const hurricanesList: Cyclone[] = [];
+  convertDataToHurricane(hurricanes: any): Hurricane[] {
+    const hurricanesList: Hurricane[] = [];
 
     //Filter objects without mandatories attributes
     hurricanes = hurricanes.filter(
@@ -150,13 +150,14 @@ export class GdacsService {
     hurricanes
       .filter((item) => item.properties?.polygonlabel === 'Centroid')
       .forEach((element) => {
-        const cyclone = new Cyclone();
-        cyclone.dernier_releve = new Date(element.properties?.todate + 'Z');
-        cyclone.premier_releve = new Date(element.properties?.fromdate + 'Z');
-        cyclone.point = element.geometry;
-        cyclone.idFromSource = element.properties?.eventid?.toString();
-        cyclone.source = this.source;
-        hurricanesList.push(cyclone);
+        const hurricane = new Hurricane();
+        hurricane.dernier_releve = new Date(element.properties?.todate + 'Z');
+        hurricane.premier_releve = new Date(element.properties?.fromdate + 'Z');
+        hurricane.point = element.geometry;
+        hurricane.idFromSource = element.properties?.eventid?.toString();
+        hurricane.source = this.source;
+        hurricane.name = element.properties?.eventname;
+        hurricanesList.push(hurricane);
       });
 
     //Surface associated
@@ -191,7 +192,7 @@ export class GdacsService {
     );
   }
 
-  getCycloneData(): Observable<Cyclone[]> {
+  getHurricaneData(): Observable<Hurricane[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=TC';
 
@@ -199,7 +200,7 @@ export class GdacsService {
       map((response: AxiosResponse) => {
         const data = response.data;
         const hurricanes = data.features || [];
-        return this.convertDataToCyclone(hurricanes);
+        return this.convertDataToHurricane(hurricanes);
       }),
       catchError((error) => {
         throw new Error(
