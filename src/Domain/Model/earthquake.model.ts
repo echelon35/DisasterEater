@@ -1,7 +1,7 @@
-import { Entity } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { Disaster } from './disaster.model';
 
-@Entity()
+@Entity('earthquakes')
 export class Earthquake extends Disaster {
   /** Global */
   // premier_releve: Date;
@@ -18,6 +18,7 @@ export class Earthquake extends Disaster {
   // ville: Ville;
   /** Specific */
   nb_stations: number;
+  @Column()
   magnitude: number;
   precision: number;
   type_magnitude: string;

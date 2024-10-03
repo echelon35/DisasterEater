@@ -6,24 +6,38 @@ import { Eruption } from '../Domain/Model/eruption.model';
 import { Inondation } from '../Domain/Model/inondation.model';
 import { Earthquake } from '../Domain/Model/earthquake.model';
 import { Cyclone } from '../Domain/Model/cyclone.model';
+import { SourceService } from './source.service';
+import { Source } from 'src/Domain/Model/source.model';
 // import * as moment from 'moment';
 
 @Injectable()
 export class GdacsService {
-  constructor(private readonly httpService: HttpService) {}
+  source: Source;
+
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly sourceService: SourceService,
+  ) {
+    this.defineGdacsSource();
+  }
+
+  async defineGdacsSource(): Promise<void> {
+    this.source = await this.sourceService.findOneByName('GDACS');
+  }
 
   convertDataToSeisme(earthquakes: any): Earthquake[] {
     const seismeList: Earthquake[] = [];
 
     earthquakes
-      .filter((item) => item.geometry.type == 'Point')
+      .filter((item) => item.geometry?.type == 'Point')
       .forEach((element) => {
         const seisme = new Earthquake();
         seisme.dernier_releve = new Date(element.properties?.todate + 'Z');
         seisme.premier_releve = new Date(element.properties?.fromdate + 'Z');
         seisme.magnitude = element.properties?.severitydata?.severity;
         seisme.type_magnitude = element.properties?.severitydata?.severityUnit;
-        seisme.idSource = element.properties?.eventid;
+        seisme.idFromSource = element.properties?.eventid;
+        seisme.source = this.source;
         seisme.nb_ressenti = element.properties?.felt;
         seisme.point = element.geometry;
         seismeList.push(seisme);
@@ -55,8 +69,8 @@ export class GdacsService {
           element.properties?.fromdate + 'Z',
         );
         inondation.point = element.geometry;
-        inondation.idSource = element.properties?.eventid?.toString();
-        inondation.sourceId = 'GDACS';
+        inondation.idFromSource = element.properties?.eventid?.toString();
+        inondation.source = this.source;
         inondationList.push(inondation);
       });
 
@@ -65,7 +79,7 @@ export class GdacsService {
       .filter((item) => item.properties?.polygonlabel === 'Affected area')
       .forEach((element) => {
         for (const obj of inondationList) {
-          if (obj.idSource == element.properties?.eventid) {
+          if (obj.idFromSource == element.properties?.eventid) {
             obj.surface = element.geometry;
           }
         }
@@ -95,8 +109,8 @@ export class GdacsService {
         eruption.dernier_releve = new Date(element.properties?.todate + 'Z');
         eruption.premier_releve = new Date(element.properties?.fromdate + 'Z');
         eruption.point = element.geometry;
-        eruption.idSource = element.properties?.eventid?.toString();
-        eruption.sourceId = 'GDACS';
+        eruption.idFromSource = element.properties?.eventid?.toString();
+        eruption.source = this.source;
         volcanoesList.push(eruption);
       });
 
@@ -105,7 +119,7 @@ export class GdacsService {
       .filter((item) => item.properties?.polygonlabel === 'OBS')
       .forEach((element) => {
         for (const obj of volcanoesList) {
-          if (obj.idSource == element.properties?.eventid) {
+          if (obj.idFromSource == element.properties?.eventid) {
             obj.surface = element.geometry;
           }
         }
@@ -136,8 +150,8 @@ export class GdacsService {
         cyclone.dernier_releve = new Date(element.properties?.todate + 'Z');
         cyclone.premier_releve = new Date(element.properties?.fromdate + 'Z');
         cyclone.point = element.geometry;
-        cyclone.idSource = element.properties?.eventid?.toString();
-        cyclone.sourceId = 'GDACS';
+        cyclone.idFromSource = element.properties?.eventid?.toString();
+        cyclone.source = this.source;
         hurricanesList.push(cyclone);
       });
 
@@ -146,7 +160,7 @@ export class GdacsService {
       .filter((item) => item.properties?.polygonlabel === 'OBS')
       .forEach((element) => {
         for (const obj of hurricanesList) {
-          if (obj.idSource == element.properties?.eventid) {
+          if (obj.idFromSource == element.properties?.eventid) {
             obj.surface = element.geometry;
           }
         }

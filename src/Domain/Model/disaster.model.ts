@@ -1,21 +1,26 @@
 import { Point } from 'geojson';
-import { Ville } from './ville.model';
+import { Column, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Source } from './source.model';
-import { Alea } from './alea.model';
 
 export class Disaster {
-  alea: Alea;
+  @PrimaryGeneratedColumn()
+  id: number;
+  // alea: Alea;
   //Dates in UTC format
+  @Column()
   premier_releve: Date;
+  @Column()
   dernier_releve: Date;
+  @Column({ type: 'geometry' })
   point: Point;
-  sourceId: string;
+  @OneToOne((type) => Source, (source) => source.id)
   source: Source;
-  idSource: string;
+  @Column()
+  idFromSource: string;
+  @Column()
   lien_source: string;
+  @Column({ default: 0 })
   nb_ressenti: number;
+  @Column({ default: true })
   visible: boolean;
-  distance_ville: number;
-  villeId: number;
-  ville: Ville;
 }
