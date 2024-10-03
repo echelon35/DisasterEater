@@ -52,7 +52,7 @@ describe('Inondation datas from Gdacs', () => {
    */
   describe('Convert inondations data from GDACS API into inondations models', () => {
     it('should only parse inondation with all mandatories attributes', async () => {
-      const gdacsList = gdacsService.convertDataToInondation(
+      const gdacsList = gdacsService.convertDataToFlood(
         mockResponseWithErrors.features,
       );
 
@@ -66,7 +66,7 @@ describe('Inondation datas from Gdacs', () => {
     });
 
     it('should contains attributes with well formats', async () => {
-      const gdacsList = gdacsService.convertDataToInondation(
+      const gdacsList = gdacsService.convertDataToFlood(
         mockResponseWithErrors.features,
       );
 

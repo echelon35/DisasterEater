@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { Observable, catchError, map } from 'rxjs';
 import { Eruption } from '../Domain/Model/eruption.model';
-import { Inondation } from '../Domain/Model/inondation.model';
+import { Flood } from '../Domain/Model/flood.model';
 import { Earthquake } from '../Domain/Model/earthquake.model';
 import { Cyclone } from '../Domain/Model/cyclone.model';
 import { SourceService } from './source.service';
@@ -21,6 +21,9 @@ export class GdacsService {
     this.defineGdacsSource();
   }
 
+  /**
+   * Search the corresponding source to associate
+   */
   async defineGdacsSource(): Promise<void> {
     this.source = await this.sourceService.findOneByName('GDACS');
   }
@@ -38,7 +41,8 @@ export class GdacsService {
         seisme.type_magnitude = element.properties?.severitydata?.severityUnit;
         seisme.idFromSource = element.properties?.eventid;
         seisme.source = this.source;
-        seisme.nb_ressenti = element.properties?.felt;
+        //No data from GDACS for felt
+        seisme.nb_ressenti = 0;
         seisme.point = element.geometry;
         seismeList.push(seisme);
       });
@@ -46,8 +50,8 @@ export class GdacsService {
     return seismeList;
   }
 
-  convertDataToInondation(floods: any): Inondation[] {
-    const inondationList: Inondation[] = [];
+  convertDataToFlood(floods: any): Flood[] {
+    const inondationList: Flood[] = [];
 
     //Filter objects without mandatories attributes
     floods = floods.filter(
@@ -63,7 +67,7 @@ export class GdacsService {
     floods
       .filter((item) => item.properties?.polygonlabel === 'Centroid')
       .forEach((element) => {
-        const inondation = new Inondation();
+        const inondation = new Flood();
         inondation.dernier_releve = new Date(element.properties?.todate + 'Z');
         inondation.premier_releve = new Date(
           element.properties?.fromdate + 'Z',
@@ -223,7 +227,7 @@ export class GdacsService {
     );
   }
 
-  getInondationData(): Observable<Inondation[]> {
+  getFloodData(): Observable<Flood[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=FL';
 
@@ -231,7 +235,7 @@ export class GdacsService {
       map((response: AxiosResponse) => {
         const data = response.data;
         const floods = data.features || [];
-        return this.convertDataToInondation(floods);
+        return this.convertDataToFlood(floods);
       }),
       catchError((error) => {
         throw new Error(

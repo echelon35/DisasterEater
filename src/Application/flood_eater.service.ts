@@ -1,51 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import { DataSource } from 'typeorm';
 import { CloudWatchService } from './cloudwatch.service';
+import { Flood } from 'src/Domain/Model/flood.model';
 
 @Injectable()
-export class EarthquakeEaterService {
+export class FloodEaterService {
   constructor(
     private readonly cloudWatchService: CloudWatchService,
     private dataSource: DataSource,
   ) {}
 
   /**
-   * Save earthquakes into db
-   * @param earthquakes
+   * Save floods into db
+   * @param floods
    */
-  async bulkRecord(earthquakes: Earthquake[]): Promise<void> {
+  async bulkRecord(floods: Flood[]): Promise<void> {
     const queryRunner = this.dataSource.createQueryRunner();
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
       //Check if earthquake already exists with the couple source and idFromSource
-      await queryRunner.manager.upsert(Earthquake, earthquakes, [
+      await queryRunner.manager.upsert(Flood, floods, [
         'idFromSource',
         'source',
       ]);
       await queryRunner.commitTransaction().then(
         () => {
-          earthquakes.forEach((item) => {
+          floods.forEach((item) => {
             this.cloudWatchService.logToCloudWatch(
-              'Earthquake',
-              `Earthquake M${item.magnitude} dated from ${item.premier_releve} added or updated`,
+              'Flood',
+              `Flood dated from ${item.premier_releve} added or updated`,
             );
           });
         },
         (err) => {
           this.cloudWatchService.logToCloudWatch(
-            'Earthquake',
-            'An error occured during earthquakes record : ' + err.toString(),
+            'Flood',
+            'An error occured during floods record : ' + err.toString(),
           );
         },
       );
     } catch (err) {
       // since we have errors lets rollback the changes we made
       this.cloudWatchService.logToCloudWatch(
-        'Earthquake',
-        'An error occured during earthquakes record : ' + err.toString(),
+        'Flood',
+        'An error occured during floods record : ' + err.toString(),
       );
       await queryRunner.rollbackTransaction();
     } finally {

@@ -23,7 +23,7 @@ export class EruptionController {
         // Loguer les données ajoutées à la base dans CloudWatch
         combinedData.forEach(async (item) => {
           const logMessage = `Nouvel événement ajouté: Eruption ${item.nom} à ${item.dernier_releve}}`;
-          await this.cloudWatchService.logToCloudWatch(logMessage);
+          await this.cloudWatchService.logToCloudWatch('volcano', logMessage);
         });
 
         return combinedData;

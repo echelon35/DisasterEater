@@ -5,7 +5,6 @@ import * as AWS from 'aws-sdk';
 export class CloudWatchService {
   private cloudWatchLogs: AWS.CloudWatchLogs;
   private logGroupName = 'DisasterEater';
-  private logStreamName = 'Seisme';
 
   constructor() {
     console.log(process.env.AWS_REGION);
@@ -17,11 +16,11 @@ export class CloudWatchService {
     });
   }
 
-  async logToCloudWatch(message: string): Promise<void> {
+  async logToCloudWatch(logStreamName: string, message: string): Promise<void> {
     // Préparer le log event
     const params = {
       logGroupName: this.logGroupName,
-      logStreamName: this.logStreamName,
+      logStreamName: logStreamName,
       logEvents: [
         {
           message,

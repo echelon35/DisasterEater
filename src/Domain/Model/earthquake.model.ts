@@ -18,7 +18,7 @@ export class Earthquake extends Disaster {
   // ville: Ville;
   /** Specific */
   nb_stations: number;
-  @Column()
+  @Column({ type: 'float' })
   magnitude: number;
   precision: number;
   type_magnitude: string;

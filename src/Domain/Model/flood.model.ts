@@ -1,7 +1,10 @@
 import { Geometry } from 'geojson';
 import { Disaster } from './disaster.model';
+import { Column, Entity } from 'typeorm';
 
-export class Inondation extends Disaster {
+@Entity('floods')
+export class Flood extends Disaster {
   niveau_alerte: number;
+  @Column({ type: 'geometry' })
   surface: Geometry;
 }

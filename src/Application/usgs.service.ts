@@ -17,6 +17,9 @@ export class UsgsService {
     this.defineUsgsSource();
   }
 
+  /**
+   * Search the corresponding source to associate
+   */
   async defineUsgsSource(): Promise<void> {
     this.source = await this.sourceService.findOneByName('USGS');
   }
@@ -39,7 +42,7 @@ export class UsgsService {
       );
       earthquake.magnitude = element.properties?.mag;
       earthquake.idFromSource = element.id;
-      earthquake.nb_ressenti = element.properties?.felt;
+      earthquake.nb_ressenti = element.properties?.felt ?? 0;
       earthquake.point = {
         type: 'Point',
         coordinates: [
@@ -47,6 +50,7 @@ export class UsgsService {
           element.geometry.coordinates[1],
         ],
       };
+      earthquake.lien_source = element.properties?.url;
       earthquake.type_magnitude = element.properties?.magtype;
       earthquake.source = this.source;
       seismeList.push(earthquake);

@@ -8,6 +8,7 @@ import { Earthquake } from './Domain/Model/earthquake.model';
 import { Source } from './Domain/Model/source.model';
 import { EarthquakeModule } from './Modules/earthquake/earthquake.module';
 import { FloodModule } from './Modules/flood/flood.module';
+import { Flood } from './Domain/Model/flood.model';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { FloodModule } from './Modules/flood/flood.module';
       username: process.env.DISASTER_EATER_DB_USER,
       password: process.env.DISASTER_EATER_DB_PASSWORD,
       database: process.env.DISASTER_EATER_DB_NAME,
-      entities: [Alea, Earthquake, Source],
+      entities: [Alea, Earthquake, Source, Flood],
       synchronize: true,
       schema: 'public',
     }),
