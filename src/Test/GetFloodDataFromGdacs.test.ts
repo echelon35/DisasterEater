@@ -3,16 +3,22 @@ import { GdacsService } from '../Application/gdacs.service';
 import * as fs from 'fs';
 import { hasSameStructure } from '../Utils/HasSameStructure';
 import { SourceService } from '../Application/source.service';
+import { CloudWatchService } from 'src/Application/cloudwatch.service';
 
 describe('Flood datas from Gdacs', () => {
   let gdacsService: GdacsService;
   let httpService: HttpService;
   let sourceService: SourceService;
+  let cloudWatchService: CloudWatchService;
   let mockResponse, mockResponseWithErrors;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    gdacsService = new GdacsService(httpService, sourceService);
+    gdacsService = new GdacsService(
+      httpService,
+      sourceService,
+      cloudWatchService,
+    );
     httpService = new HttpService();
     mockResponse = JSON.parse(
       fs.readFileSync(

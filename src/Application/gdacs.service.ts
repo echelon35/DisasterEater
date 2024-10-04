@@ -8,15 +8,18 @@ import { Earthquake } from '../Domain/Model/earthquake.model';
 import { SourceService } from './source.service';
 import { Source } from 'src/Domain/Model/source.model';
 import { Hurricane } from 'src/Domain/Model/hurricane.model';
+import { CloudWatchService } from './cloudwatch.service';
 // import * as moment from 'moment';
 
 @Injectable()
 export class GdacsService {
   source: Source;
+  sourceName = 'GDACS';
 
   constructor(
     private readonly httpService: HttpService,
     private readonly sourceService: SourceService,
+    private readonly cloudWatchService: CloudWatchService,
   ) {
     this.defineGdacsSource();
   }
@@ -25,11 +28,20 @@ export class GdacsService {
    * Search the corresponding source to associate
    */
   async defineGdacsSource(): Promise<void> {
-    this.source = await this.sourceService.findOneByName('GDACS');
+    this.source = await this.sourceService.findOneByName(this.sourceName);
   }
 
   convertDataToSeisme(earthquakes: any): Earthquake[] {
     const seismeList: Earthquake[] = [];
+
+    if (this.source == null) {
+      this.cloudWatchService.logToCloudWatch(
+        'Earthquake',
+        `Warning, it seems that there\'s no source corresponding to ${this.sourceName} _
+        earthquake list from ${this.sourceName} will be empty`,
+      );
+      return seismeList;
+    }
 
     earthquakes
       .filter((item) => item.geometry?.type == 'Point')
@@ -43,6 +55,7 @@ export class GdacsService {
         seisme.source = this.source;
         //No data from GDACS for felt
         seisme.nb_ressenti = 0;
+        seisme.lien_source = element.properties?.url?.details;
         seisme.point = element.geometry;
         seismeList.push(seisme);
       });
@@ -52,6 +65,15 @@ export class GdacsService {
 
   convertDataToFlood(floods: any): Flood[] {
     const inondationList: Flood[] = [];
+
+    if (this.source == null) {
+      this.cloudWatchService.logToCloudWatch(
+        'Flood',
+        `Warning, it seems that there\'s no source corresponding to ${this.sourceName} _
+        flood list from ${this.sourceName} will be empty`,
+      );
+      return inondationList;
+    }
 
     //Filter objects without mandatories attributes
     floods = floods.filter(
@@ -75,6 +97,7 @@ export class GdacsService {
         inondation.point = element.geometry;
         inondation.idFromSource = element.properties?.eventid?.toString();
         inondation.source = this.source;
+        inondation.lien_source = element.properties?.url?.details;
         inondationList.push(inondation);
       });
 
@@ -135,6 +158,14 @@ export class GdacsService {
   convertDataToHurricane(hurricanes: any): Hurricane[] {
     const hurricanesList: Hurricane[] = [];
 
+    if (this.source == null) {
+      const log = `Warning, it seems that there\'s no source corresponding to ${this.sourceName} _
+        hurricane list from ${this.sourceName} will be empty`;
+      this.cloudWatchService.logToCloudWatch('Hurricane', log);
+      console.log(log);
+      return hurricanesList;
+    }
+
     //Filter objects without mandatories attributes
     hurricanes = hurricanes.filter(
       (item) =>
@@ -155,6 +186,7 @@ export class GdacsService {
         hurricane.premier_releve = new Date(element.properties?.fromdate + 'Z');
         hurricane.point = element.geometry;
         hurricane.idFromSource = element.properties?.eventid?.toString();
+        hurricane.lien_source = element.properties?.url?.details;
         hurricane.source = this.source;
         hurricane.name = element.properties?.eventname;
         hurricanesList.push(hurricane);
