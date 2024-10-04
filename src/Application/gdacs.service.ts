@@ -210,16 +210,45 @@ export class GdacsService {
             coordinates: coordinatesArray,
           };
         }
-      });
 
-    //Surface associated
-    hurricanes
-      .filter((item) => item.properties?.polygonlabel === 'OBS')
-      .forEach((element) => {
-        for (const obj of hurricanesList) {
-          if (obj.idFromSource == element.properties?.eventid?.toString()) {
-            obj.surface = element.geometry;
-          }
+        /** Forecast */
+        const prevision = hurricanesCopy.filter(
+          (prevItem) =>
+            prevItem.properties?.eventid?.toString() ===
+              hurricane.idFromSource &&
+            prevItem.geometry?.type === 'Polygon' &&
+            prevItem.properties?.polygonlabel === 'Uncertainty Cones',
+        );
+        //Convert the forecast from geojson into Polygon Object
+        if (prevision.length > 0) {
+          const coordinatesArray = prevision.map(
+            (item) => item.geometry.coordinates,
+          );
+          hurricane.forecast = {
+            type: 'Polygon',
+            coordinates: coordinatesArray[0],
+          };
+        }
+
+        /** Surface */
+        const surface = hurricanesCopy.filter(
+          (surfaceItem) =>
+            surfaceItem.properties?.eventid?.toString() ===
+              hurricane.idFromSource &&
+            surfaceItem.geometry.type === 'Polygon' &&
+            (surfaceItem.properties.Class === 'Poly_Green' ||
+              surfaceItem.properties.Class === 'Poly_Orange' ||
+              surfaceItem.properties.Class === 'Poly_Red'),
+        );
+
+        if (surface.length > 0) {
+          const coordinatesArray = surface.map(
+            (item) => item.geometry.coordinates,
+          );
+          hurricane.surface = {
+            type: 'MultiPolygon',
+            coordinates: coordinatesArray,
+          };
         }
       });
 
