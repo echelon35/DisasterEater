@@ -6,13 +6,16 @@ import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import * as moment from 'moment';
 import { Source } from 'src/Domain/Model/source.model';
 import { SourceService } from './source.service';
+import { CloudWatchService } from './cloudwatch.service';
 
 @Injectable()
 export class UsgsService {
   source: Source;
+  sourceName = 'USGS';
   constructor(
     private readonly httpService: HttpService,
     private readonly sourceService: SourceService,
+    private readonly cloudWatchService: CloudWatchService,
   ) {
     this.defineUsgsSource();
   }
@@ -21,7 +24,7 @@ export class UsgsService {
    * Search the corresponding source to associate
    */
   async defineUsgsSource(): Promise<void> {
-    this.source = await this.sourceService.findOneByName('USGS');
+    this.source = await this.sourceService.findOneByName(this.sourceName);
   }
 
   /**
@@ -31,6 +34,14 @@ export class UsgsService {
    */
   convertDataToSeisme(earthquakes: any): Earthquake[] {
     const seismeList: Earthquake[] = [];
+
+    if (this.source == null) {
+      const log = `Warning, it seems that there\'s no source corresponding to ${this.sourceName} _
+        hurricane list from ${this.sourceName} will be empty`;
+      this.cloudWatchService.logToCloudWatch('Hurricane', log);
+      console.log(log);
+      return seismeList;
+    }
 
     earthquakes.forEach((element: any) => {
       const earthquake = new Earthquake();

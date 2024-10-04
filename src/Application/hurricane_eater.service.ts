@@ -30,7 +30,7 @@ export class HurricaneEaterService {
           hurricanes.forEach((item) => {
             this.cloudWatchService.logToCloudWatch(
               'Hurricane',
-              `Hurrcane ${item.name} added or updated`,
+              `Hurricane ${item.name} added or updated`,
             );
           });
         },

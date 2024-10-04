@@ -9,7 +9,6 @@ import { SourceService } from './source.service';
 import { Source } from 'src/Domain/Model/source.model';
 import { Hurricane } from 'src/Domain/Model/hurricane.model';
 import { CloudWatchService } from './cloudwatch.service';
-// import * as moment from 'moment';
 
 @Injectable()
 export class GdacsService {
@@ -178,6 +177,8 @@ export class GdacsService {
         item.properties?.eventtype == 'TC',
     );
 
+    const hurricanesCopy = hurricanes;
+
     hurricanes
       .filter((item) => item.properties?.polygonlabel === 'Centroid')
       .forEach((element) => {
@@ -190,6 +191,25 @@ export class GdacsService {
         hurricane.source = this.source;
         hurricane.name = element.properties?.eventname;
         hurricanesList.push(hurricane);
+
+        /**Path of hurricane */
+        const path = hurricanesCopy
+          .filter(
+            (pathElement) =>
+              pathElement.properties.eventid?.toString() ==
+                hurricane.idFromSource &&
+              pathElement.geometry.type === 'LineString',
+          )
+          .map((item) => item.geometry);
+
+        //Convert the path from geojson into MultiLineString Object
+        if (path.length > 0) {
+          const coordinatesArray = path.map((item) => item.coordinates);
+          hurricane.path = {
+            type: 'MultiLineString',
+            coordinates: coordinatesArray,
+          };
+        }
       });
 
     //Surface associated
@@ -197,7 +217,7 @@ export class GdacsService {
       .filter((item) => item.properties?.polygonlabel === 'OBS')
       .forEach((element) => {
         for (const obj of hurricanesList) {
-          if (obj.idFromSource == element.properties?.eventid) {
+          if (obj.idFromSource == element.properties?.eventid?.toString()) {
             obj.surface = element.geometry;
           }
         }
