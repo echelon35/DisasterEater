@@ -117,6 +117,14 @@ export class GdacsService {
   convertDataToEruption(volcanoes: any): Eruption[] {
     const volcanoesList: Eruption[] = [];
 
+    if (this.source == null) {
+      const log = `Warning, it seems that there\'s no source corresponding to ${this.sourceName} _
+        eruption list from ${this.sourceName} will be empty`;
+      this.cloudWatchService.logToCloudWatch('Eruption', log);
+      console.log(log);
+      return volcanoesList;
+    }
+
     //Filter objects without mandatories attributes
     volcanoes = volcanoes.filter(
       (item) =>
@@ -125,7 +133,7 @@ export class GdacsService {
         item.properties?.eventid != null &&
         item.properties?.todate != null &&
         item.properties?.polygonlabel != null &&
-        item.properties?.eventtype == 'VO',
+        item.properties?.eventtype === 'VO',
     );
 
     volcanoes
@@ -138,17 +146,6 @@ export class GdacsService {
         eruption.idFromSource = element.properties?.eventid?.toString();
         eruption.source = this.source;
         volcanoesList.push(eruption);
-      });
-
-    //Surface associated
-    volcanoes
-      .filter((item) => item.properties?.polygonlabel === 'OBS')
-      .forEach((element) => {
-        for (const obj of volcanoesList) {
-          if (obj.idFromSource == element.properties?.eventid) {
-            obj.surface = element.geometry;
-          }
-        }
       });
 
     return volcanoesList;

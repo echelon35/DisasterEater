@@ -25,22 +25,7 @@ export class EarthquakeEaterService {
         'idFromSource',
         'source',
       ]);
-      await queryRunner.commitTransaction().then(
-        () => {
-          earthquakes.forEach((item) => {
-            this.cloudWatchService.logToCloudWatch(
-              'Earthquake',
-              `Earthquake M${item.magnitude} dated from ${item.premier_releve} added or updated`,
-            );
-          });
-        },
-        (err) => {
-          this.cloudWatchService.logToCloudWatch(
-            'Earthquake',
-            'An error occured during earthquakes record : ' + err.toString(),
-          );
-        },
-      );
+      await queryRunner.commitTransaction();
     } catch (err) {
       // since we have errors lets rollback the changes we made
       this.cloudWatchService.logToCloudWatch(
