@@ -1,10 +1,12 @@
 import { Point } from 'geojson';
 import {
   Column,
+  CreateDateColumn,
   Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Source } from './source.model';
 
@@ -31,4 +33,22 @@ export class Disaster {
   nb_ressenti: number;
   @Column({ default: true })
   visible: boolean;
+  @CreateDateColumn({
+    type: 'timestamp without time zone',
+    nullable: true,
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  createdAt: Date;
+  @UpdateDateColumn({
+    type: 'timestamp without time zone',
+    nullable: true,
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  updatedAt: Date;
+  // @Column()
+  // createdAt: Date;
+  // @Column()
+  // updatedAt: Date;
+  // @Column()
+  // removedAt: Date;
 }

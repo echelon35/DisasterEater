@@ -19,12 +19,13 @@ export class EarthquakeEaterService {
 
     await queryRunner.connect();
     await queryRunner.startTransaction();
+
     try {
       //Check if earthquake already exists with the couple source and idFromSource
-      await queryRunner.manager.upsert(Earthquake, earthquakes, [
-        'idFromSource',
-        'source',
-      ]);
+      await queryRunner.manager.upsert(Earthquake, earthquakes, {
+        skipUpdateIfNoValuesChanged: true,
+        conflictPaths: ['idFromSource', 'source'],
+      });
       await queryRunner.commitTransaction();
     } catch (err) {
       // since we have errors lets rollback the changes we made

@@ -9,6 +9,7 @@ import { UsgsService } from 'src/Application/usgs.service';
 import { EarthquakeController } from 'src/Controllers/earthquake.controller';
 import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import { Source } from 'src/Domain/Model/source.model';
+import { EarthquakeSubscriber } from 'src/Infrastructure/Subscribers/earthquake.subscriber';
 
 @Module({
   imports: [HttpModule, TypeOrmModule.forFeature([Source, Earthquake])],
@@ -19,6 +20,7 @@ import { Source } from 'src/Domain/Model/source.model';
     SourceService,
     GdacsService,
     EarthquakeEaterService,
+    EarthquakeSubscriber,
   ],
 })
 export class EarthquakeModule {}

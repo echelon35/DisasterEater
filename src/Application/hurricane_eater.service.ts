@@ -20,27 +20,12 @@ export class HurricaneEaterService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      //Check if earthquake already exists with the couple source and idFromSource
-      await queryRunner.manager.upsert(Hurricane, hurricanes, [
-        'idFromSource',
-        'source',
-      ]);
-      await queryRunner.commitTransaction().then(
-        () => {
-          hurricanes.forEach((item) => {
-            this.cloudWatchService.logToCloudWatch(
-              'Hurricane',
-              `Hurricane ${item.name} added or updated`,
-            );
-          });
-        },
-        (err) => {
-          this.cloudWatchService.logToCloudWatch(
-            'Hurricane',
-            'An error occured during hurricanes record : ' + err.toString(),
-          );
-        },
-      );
+      //Check if hurricane already exists with the couple source and idFromSource
+      await queryRunner.manager.upsert(Hurricane, hurricanes, {
+        skipUpdateIfNoValuesChanged: true,
+        conflictPaths: ['idFromSource', 'source'],
+      });
+      await queryRunner.commitTransaction();
     } catch (err) {
       // since we have errors lets rollback the changes we made
       this.cloudWatchService.logToCloudWatch(

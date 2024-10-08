@@ -8,6 +8,7 @@ import { SourceService } from 'src/Application/source.service';
 import { HurricaneController } from 'src/Controllers/hurricane.controller.';
 import { Hurricane } from 'src/Domain/Model/hurricane.model';
 import { Source } from 'src/Domain/Model/source.model';
+import { HurricaneSubscriber } from 'src/Infrastructure/Subscribers/hurricane.subscriber';
 
 @Module({
   imports: [HttpModule, TypeOrmModule.forFeature([Source, Hurricane])],
@@ -17,6 +18,7 @@ import { Source } from 'src/Domain/Model/source.model';
     SourceService,
     GdacsService,
     HurricaneEaterService,
+    HurricaneSubscriber,
   ],
 })
 export class HurricaneModule {}
