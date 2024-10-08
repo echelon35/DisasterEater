@@ -20,27 +20,11 @@ export class EruptionEaterService {
     await queryRunner.connect();
     await queryRunner.startTransaction();
     try {
-      //Check if earthquake already exists with the couple source and idFromSource
-      await queryRunner.manager.upsert(Eruption, eruptions, [
-        'idFromSource',
-        'source',
-      ]);
-      await queryRunner.commitTransaction().then(
-        () => {
-          eruptions.forEach((item) => {
-            this.cloudWatchService.logToCloudWatch(
-              'Eruption',
-              `Eruption of ${item.name} volcano added or updated`,
-            );
-          });
-        },
-        (err) => {
-          this.cloudWatchService.logToCloudWatch(
-            'Eruption',
-            'An error occured during eruptions record : ' + err.toString(),
-          );
-        },
-      );
+      await queryRunner.manager.upsert(Eruption, eruptions, {
+        skipUpdateIfNoValuesChanged: true,
+        conflictPaths: ['idFromSource', 'source'],
+      });
+      await queryRunner.commitTransaction();
     } catch (err) {
       // since we have errors lets rollback the changes we made
       this.cloudWatchService.logToCloudWatch(

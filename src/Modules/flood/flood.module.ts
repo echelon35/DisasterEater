@@ -8,6 +8,7 @@ import { SourceService } from 'src/Application/source.service';
 import { FloodController } from 'src/Controllers/flood.controller';
 import { Flood } from 'src/Domain/Model/flood.model';
 import { Source } from 'src/Domain/Model/source.model';
+import { FloodSubscriber } from 'src/Infrastructure/Subscribers/flood.subscriber';
 
 @Module({
   imports: [HttpModule, TypeOrmModule.forFeature([Source, Flood])],
@@ -17,6 +18,7 @@ import { Source } from 'src/Domain/Model/source.model';
     SourceService,
     GdacsService,
     FloodEaterService,
+    FloodSubscriber,
   ],
 })
 export class FloodModule {}

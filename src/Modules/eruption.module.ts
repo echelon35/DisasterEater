@@ -8,6 +8,7 @@ import { SourceService } from 'src/Application/source.service';
 import { EruptionController } from 'src/Controllers/eruption.controller';
 import { Eruption } from 'src/Domain/Model/eruption.model';
 import { Source } from 'src/Domain/Model/source.model';
+import { EruptionSubscriber } from 'src/Infrastructure/Subscribers/eruption.subscriber';
 
 @Module({
   imports: [HttpModule, TypeOrmModule.forFeature([Source, Eruption])],
@@ -17,6 +18,7 @@ import { Source } from 'src/Domain/Model/source.model';
     SourceService,
     GdacsService,
     EruptionEaterService,
+    EruptionSubscriber,
   ],
 })
 export class EruptionModule {}
