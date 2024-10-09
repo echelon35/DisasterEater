@@ -7,7 +7,6 @@ export class CloudWatchService {
   private logGroupName = 'DisasterEater';
 
   constructor() {
-    console.log(process.env.AWS_REGION);
     // Initialisation de CloudWatch Logs
     this.cloudWatchLogs = new AWS.CloudWatchLogs({
       region: process.env.AWS_REGION,

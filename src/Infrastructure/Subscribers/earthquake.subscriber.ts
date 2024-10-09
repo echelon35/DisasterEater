@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
+import { NotifierService } from 'src/Application/notifier.service';
+import { InsertType } from 'src/DTO/disasterDataFromSQS';
 import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import {
   Connection,
@@ -16,6 +18,7 @@ export class EarthquakeSubscriber
   constructor(
     private readonly connection: Connection,
     private readonly cloudWatchService: CloudWatchService,
+    private readonly notifierService: NotifierService,
   ) {
     connection.subscribers.push(this);
   }
@@ -32,11 +35,22 @@ export class EarthquakeSubscriber
           'Earthquake',
           `Updated Earthquake M${earthquake.magnitude} dated from ${earthquake.premier_releve}`,
         );
+        //Send to queue
+        this.notifierService.sendNotificationToSQS({
+          type: InsertType.UPDATE,
+          disaster_type: 'earthquake',
+          disaster: earthquake,
+        });
       } else {
         this.cloudWatchService.logToCloudWatch(
           'Earthquake',
           `Created Earthquake M${earthquake.magnitude} dated from ${earthquake.premier_releve}`,
         );
+        this.notifierService.sendNotificationToSQS({
+          type: InsertType.CREATION,
+          disaster_type: 'earthquake',
+          disaster: earthquake,
+        });
       }
     }
   }

@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
+import { NotifierService } from 'src/Application/notifier.service';
+import { InsertType } from 'src/DTO/disasterDataFromSQS';
 import { Flood } from 'src/Domain/Model/flood.model';
 import {
   Connection,
@@ -14,6 +16,7 @@ export class FloodSubscriber implements EntitySubscriberInterface<Flood> {
   constructor(
     private readonly connection: Connection,
     private readonly cloudWatchService: CloudWatchService,
+    private readonly notifierService: NotifierService,
   ) {
     connection.subscribers.push(this);
   }
@@ -30,11 +33,22 @@ export class FloodSubscriber implements EntitySubscriberInterface<Flood> {
           'Flood',
           `Updated flood dated from ${flood.premier_releve}`,
         );
+        //Send to queue
+        this.notifierService.sendNotificationToSQS({
+          type: InsertType.UPDATE,
+          disaster_type: 'flood',
+          disaster: flood,
+        });
       } else {
         this.cloudWatchService.logToCloudWatch(
           'Flood',
           `Created flood dated from ${flood.premier_releve}`,
         );
+        this.notifierService.sendNotificationToSQS({
+          type: InsertType.CREATION,
+          disaster_type: 'flood',
+          disaster: flood,
+        });
       }
     }
   }

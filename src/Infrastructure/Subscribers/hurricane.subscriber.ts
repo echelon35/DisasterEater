@@ -1,4 +1,6 @@
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
+import { NotifierService } from 'src/Application/notifier.service';
+import { InsertType } from 'src/DTO/disasterDataFromSQS';
 import { Hurricane } from 'src/Domain/Model/hurricane.model';
 import {
   Connection,
@@ -14,6 +16,7 @@ export class HurricaneSubscriber
   constructor(
     private readonly connection: Connection,
     private readonly cloudWatchService: CloudWatchService,
+    private readonly notifierService: NotifierService,
   ) {
     connection.subscribers.push(this);
   }
@@ -30,11 +33,21 @@ export class HurricaneSubscriber
           'Hurricane',
           `Updated hurricane ${hurricane.name}`,
         );
+        this.notifierService.sendNotificationToSQS({
+          type: InsertType.UPDATE,
+          disaster_type: 'hurricane',
+          disaster: hurricane,
+        });
       } else {
         this.cloudWatchService.logToCloudWatch(
           'Hurricane',
           `Created hurricane ${hurricane.name}`,
         );
+        this.notifierService.sendNotificationToSQS({
+          type: InsertType.CREATION,
+          disaster_type: 'hurricane',
+          disaster: hurricane,
+        });
       }
     }
   }

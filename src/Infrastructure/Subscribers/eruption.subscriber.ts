@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
+import { NotifierService } from 'src/Application/notifier.service';
+import { InsertType } from 'src/DTO/disasterDataFromSQS';
 import { Eruption } from 'src/Domain/Model/eruption.model';
 import {
   Connection,
@@ -14,6 +16,7 @@ export class EruptionSubscriber implements EntitySubscriberInterface<Eruption> {
   constructor(
     private readonly connection: Connection,
     private readonly cloudWatchService: CloudWatchService,
+    private readonly notifierService: NotifierService,
   ) {
     connection.subscribers.push(this);
   }
@@ -30,11 +33,21 @@ export class EruptionSubscriber implements EntitySubscriberInterface<Eruption> {
           'Eruption',
           `Updated eruption of ${eruption.name} dated from ${eruption.name}`,
         );
+        this.notifierService.sendNotificationToSQS({
+          type: InsertType.UPDATE,
+          disaster_type: 'eruption',
+          disaster: eruption,
+        });
       } else {
         this.cloudWatchService.logToCloudWatch(
           'Earthquake',
           `Created eruption of ${eruption.name} dated from ${eruption.name}`,
         );
+        this.notifierService.sendNotificationToSQS({
+          type: InsertType.CREATION,
+          disaster_type: 'eruption',
+          disaster: eruption,
+        });
       }
     }
   }

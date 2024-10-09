@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
 import { FloodEaterService } from 'src/Application/flood_eater.service';
 import { GdacsService } from 'src/Application/gdacs.service';
+import { NotifierService } from 'src/Application/notifier.service';
 import { SourceService } from 'src/Application/source.service';
 import { FloodController } from 'src/Controllers/flood.controller';
 import { Flood } from 'src/Domain/Model/flood.model';
@@ -19,6 +20,7 @@ import { FloodSubscriber } from 'src/Infrastructure/Subscribers/flood.subscriber
     GdacsService,
     FloodEaterService,
     FloodSubscriber,
+    NotifierService,
   ],
 })
 export class FloodModule {}
