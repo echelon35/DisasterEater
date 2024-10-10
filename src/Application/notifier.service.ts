@@ -7,7 +7,7 @@ export class NotifierService {
   async sendNotificationToSQS(disasterData: DisasterDataFromSQS) {
     const params = {
       QueueUrl: process.env.AWS_QUEUE,
-      MessageBody: JSON.stringify(disasterData.disaster),
+      MessageBody: JSON.stringify(disasterData),
       MessageGroupId: disasterData.disaster_type + '_group',
       MessageDeduplicationId: new Date().toISOString(),
     };

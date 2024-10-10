@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
 import { EarthquakeEaterService } from 'src/Application/earthquake_eater.service';
 import { GdacsService } from 'src/Application/gdacs.service';
+import { NotifierService } from 'src/Application/notifier.service';
 import { SourceService } from 'src/Application/source.service';
 import { UsgsService } from 'src/Application/usgs.service';
 import { EarthquakeController } from 'src/Controllers/earthquake.controller';
@@ -21,6 +22,7 @@ import { EarthquakeSubscriber } from 'src/Infrastructure/Subscribers/earthquake.
     GdacsService,
     EarthquakeEaterService,
     EarthquakeSubscriber,
+    NotifierService,
   ],
 })
 export class EarthquakeModule {}

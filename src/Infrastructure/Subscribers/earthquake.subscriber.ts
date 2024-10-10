@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
 import { NotifierService } from 'src/Application/notifier.service';
+import { DisasterToSendToSQS } from 'src/DTO/DisasterToSendToSQS';
 import { InsertType } from 'src/DTO/disasterDataFromSQS';
 import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import {
@@ -39,7 +40,7 @@ export class EarthquakeSubscriber
         this.notifierService.sendNotificationToSQS({
           type: InsertType.UPDATE,
           disaster_type: 'earthquake',
-          disaster: earthquake,
+          disaster: new DisasterToSendToSQS(earthquake),
         });
       } else {
         this.cloudWatchService.logToCloudWatch(
@@ -49,7 +50,7 @@ export class EarthquakeSubscriber
         this.notifierService.sendNotificationToSQS({
           type: InsertType.CREATION,
           disaster_type: 'earthquake',
-          disaster: earthquake,
+          disaster: new DisasterToSendToSQS(earthquake),
         });
       }
     }

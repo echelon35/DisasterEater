@@ -1,4 +1,4 @@
-import { Disaster } from 'src/Domain/Model/disaster.model';
+import { DisasterToSendToSQS } from './DisasterToSendToSQS';
 
 export enum InsertType {
   CREATION = 'create',
@@ -8,5 +8,5 @@ export enum InsertType {
 export class DisasterDataFromSQS {
   type: InsertType;
   disaster_type: string;
-  disaster: Disaster;
+  disaster: DisasterToSendToSQS;
 }

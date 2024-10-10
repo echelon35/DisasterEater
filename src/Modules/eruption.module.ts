@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
 import { EruptionEaterService } from 'src/Application/eruption_eater.service';
 import { GdacsService } from 'src/Application/gdacs.service';
+import { NotifierService } from 'src/Application/notifier.service';
 import { SourceService } from 'src/Application/source.service';
 import { EruptionController } from 'src/Controllers/eruption.controller';
 import { Eruption } from 'src/Domain/Model/eruption.model';
@@ -19,6 +20,7 @@ import { EruptionSubscriber } from 'src/Infrastructure/Subscribers/eruption.subs
     GdacsService,
     EruptionEaterService,
     EruptionSubscriber,
+    NotifierService,
   ],
 })
 export class EruptionModule {}

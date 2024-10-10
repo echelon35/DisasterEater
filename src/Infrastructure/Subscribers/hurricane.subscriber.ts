@@ -1,5 +1,6 @@
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
 import { NotifierService } from 'src/Application/notifier.service';
+import { DisasterToSendToSQS } from 'src/DTO/DisasterToSendToSQS';
 import { InsertType } from 'src/DTO/disasterDataFromSQS';
 import { Hurricane } from 'src/Domain/Model/hurricane.model';
 import {
@@ -36,7 +37,7 @@ export class HurricaneSubscriber
         this.notifierService.sendNotificationToSQS({
           type: InsertType.UPDATE,
           disaster_type: 'hurricane',
-          disaster: hurricane,
+          disaster: new DisasterToSendToSQS(hurricane),
         });
       } else {
         this.cloudWatchService.logToCloudWatch(
@@ -46,7 +47,7 @@ export class HurricaneSubscriber
         this.notifierService.sendNotificationToSQS({
           type: InsertType.CREATION,
           disaster_type: 'hurricane',
-          disaster: hurricane,
+          disaster: new DisasterToSendToSQS(hurricane),
         });
       }
     }

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CloudWatchService } from 'src/Application/cloudwatch.service';
 import { GdacsService } from 'src/Application/gdacs.service';
 import { HurricaneEaterService } from 'src/Application/hurricane_eater.service';
+import { NotifierService } from 'src/Application/notifier.service';
 import { SourceService } from 'src/Application/source.service';
 import { HurricaneController } from 'src/Controllers/hurricane.controller.';
 import { Hurricane } from 'src/Domain/Model/hurricane.model';
@@ -19,6 +20,7 @@ import { HurricaneSubscriber } from 'src/Infrastructure/Subscribers/hurricane.su
     GdacsService,
     HurricaneEaterService,
     HurricaneSubscriber,
+    NotifierService,
   ],
 })
 export class HurricaneModule {}
