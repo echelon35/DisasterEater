@@ -13,6 +13,7 @@ import { Hurricane } from './Domain/Model/hurricane.model';
 import { HurricaneModule } from './Modules/hurricane.module';
 import { Eruption } from './Domain/Model/eruption.model';
 import { EruptionModule } from './Modules/eruption.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -29,7 +30,9 @@ import { EruptionModule } from './Modules/eruption.module';
       database: process.env.DISASTER_EATER_DB_NAME,
       entities: [Alea, Earthquake, Source, Flood, Hurricane, Eruption],
       schema: 'public',
+      logging: true,
     }),
+    ScheduleModule.forRoot(),
     EarthquakeModule,
     FloodModule,
     HurricaneModule,

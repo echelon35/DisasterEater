@@ -7,6 +7,7 @@ import { GdacsService } from 'src/Application/gdacs.service';
 import { NotifierService } from 'src/Application/notifier.service';
 import { SourceService } from 'src/Application/source.service';
 import { FloodController } from 'src/Controllers/flood.controller';
+import { FloodJob } from 'src/Cron/flood_job.service';
 import { Flood } from 'src/Domain/Model/flood.model';
 import { Source } from 'src/Domain/Model/source.model';
 import { FloodSubscriber } from 'src/Infrastructure/Subscribers/flood.subscriber';
@@ -20,6 +21,7 @@ import { FloodSubscriber } from 'src/Infrastructure/Subscribers/flood.subscriber
     GdacsService,
     FloodEaterService,
     FloodSubscriber,
+    FloodJob,
     NotifierService,
   ],
 })

@@ -8,6 +8,7 @@ import { NotifierService } from 'src/Application/notifier.service';
 import { SourceService } from 'src/Application/source.service';
 import { UsgsService } from 'src/Application/usgs.service';
 import { EarthquakeController } from 'src/Controllers/earthquake.controller';
+import { EarthquakeJob } from 'src/Cron/earthquake_job.service';
 import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import { Source } from 'src/Domain/Model/source.model';
 import { EarthquakeSubscriber } from 'src/Infrastructure/Subscribers/earthquake.subscriber';
@@ -20,6 +21,7 @@ import { EarthquakeSubscriber } from 'src/Infrastructure/Subscribers/earthquake.
     CloudWatchService,
     SourceService,
     GdacsService,
+    EarthquakeJob,
     EarthquakeEaterService,
     EarthquakeSubscriber,
     NotifierService,
