@@ -28,7 +28,6 @@ import { EruptionModule } from './Modules/eruption.module';
       password: process.env.DISASTER_EATER_DB_PASSWORD,
       database: process.env.DISASTER_EATER_DB_NAME,
       entities: [Alea, Earthquake, Source, Flood, Hurricane, Eruption],
-      synchronize: true,
       schema: 'public',
     }),
     EarthquakeModule,

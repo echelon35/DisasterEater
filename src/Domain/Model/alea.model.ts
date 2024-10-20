@@ -10,6 +10,6 @@ export class Alea {
   legend: string;
   @Column({ default: true })
   disponible: boolean;
-  @Column({ type: 'json' })
+  @Column({ type: 'json', nullable: true })
   keywords: string[];
 }

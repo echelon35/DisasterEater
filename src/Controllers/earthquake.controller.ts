@@ -1,9 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
 import { GdacsService } from '../Application/gdacs.service';
 import { UsgsService } from '../Application/usgs.service';
 import { Observable, forkJoin, map } from 'rxjs';
 import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import { EarthquakeEaterService } from 'src/Application/earthquake_eater.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
+import { Controller, Get } from '@nestjs/common';
 
 @Controller('earthquake')
 export class EarthquakeController {
@@ -13,6 +14,7 @@ export class EarthquakeController {
     private readonly earthquakeEaterService: EarthquakeEaterService,
   ) {}
 
+  @Cron(CronExpression.EVERY_5_MINUTES)
   @Get('data')
   getAllEarthquakeData(): Observable<Earthquake[]> {
     return forkJoin({
