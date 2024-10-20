@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
-import { Observable, catchError, map } from 'rxjs';
+import { Observable, catchError, map, tap, timeout } from 'rxjs';
 import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import * as moment from 'moment';
 import { Source } from 'src/Domain/Model/source.model';
@@ -84,11 +84,14 @@ export class UsgsService {
     const yesterday_format = `${yesterday.getFullYear()}-${yesterday.getMonth() + 1}-${yesterday.getDate()}`;
 
     const apiUrl = `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=${yesterday_format}&endtime=${tomorrow_format}&minmagnitude=${magnitudeMin}`;
+    console.log(apiUrl);
 
-    return this.httpService.get(apiUrl).pipe(
+    return this.httpService.get(apiUrl, { timeout: 30000 }).pipe(
+      tap(() => console.log('Appel HTTP envoyé avec succès')),
       map((response: AxiosResponse) => {
         const data = response.data;
         const seismes = data.features || [];
+        console.log(seismes.length + " séismes remontés par l'USGS");
         return this.convertDataToSeisme(seismes);
       }),
       catchError((error) => {

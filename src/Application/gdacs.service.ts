@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
-import { Observable, catchError, map } from 'rxjs';
+import { Observable, catchError, map, tap } from 'rxjs';
 import { Eruption } from '../Domain/Model/eruption.model';
 import { Flood } from '../Domain/Model/flood.model';
 import { Earthquake } from '../Domain/Model/earthquake.model';
@@ -255,14 +255,20 @@ export class GdacsService {
   getEarthquakeData(): Observable<Earthquake[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=EQ';
+    console.log(apiUrl);
 
-    return this.httpService.get(apiUrl).pipe(
+    return this.httpService.get(apiUrl, { timeout: 30000 }).pipe(
+      tap(() => console.log('Appel HTTP envoyé avec succès')),
       map((response: AxiosResponse) => {
         const data = response.data;
         const seismes = data.features || [];
+        console.log(seismes.length + ' séismes remontés par le GDACS');
         return this.convertDataToSeisme(seismes);
       }),
       catchError((error) => {
+        console.error(
+          `Erreur lors de la récupération des données GDACS : ${error.message}`,
+        );
         throw new Error(
           `Erreur lors de la récupération des données GDACS : ${error.message}`,
         );
@@ -273,14 +279,19 @@ export class GdacsService {
   getHurricaneData(): Observable<Hurricane[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=TC';
+    console.log(apiUrl);
 
     return this.httpService.get(apiUrl).pipe(
+      tap(() => console.log('Appel HTTP envoyé avec succès')),
       map((response: AxiosResponse) => {
         const data = response.data;
         const hurricanes = data.features || [];
         return this.convertDataToHurricane(hurricanes);
       }),
       catchError((error) => {
+        console.error(
+          `Erreur lors de la récupération des données GDACS : ${error.message}`,
+        );
         throw new Error(
           `Erreur lors de la récupération des données GDACS : ${error.message}`,
         );
@@ -291,14 +302,19 @@ export class GdacsService {
   getEruptionData(): Observable<Eruption[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=VO';
+    console.log(apiUrl);
 
     return this.httpService.get(apiUrl).pipe(
+      tap(() => console.log('Appel HTTP envoyé avec succès')),
       map((response: AxiosResponse) => {
         const data = response.data;
         const volcanoes = data.features || [];
         return this.convertDataToEruption(volcanoes);
       }),
       catchError((error) => {
+        console.error(
+          `Erreur lors de la récupération des données GDACS : ${error.message}`,
+        );
         throw new Error(
           `Erreur lors de la récupération des données GDACS : ${error.message}`,
         );
@@ -310,13 +326,19 @@ export class GdacsService {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=FL';
 
+    console.log(apiUrl);
+
     return this.httpService.get(apiUrl).pipe(
+      tap(() => console.log('Appel HTTP envoyé avec succès')),
       map((response: AxiosResponse) => {
         const data = response.data;
         const floods = data.features || [];
         return this.convertDataToFlood(floods);
       }),
       catchError((error) => {
+        console.error(
+          `Erreur lors de la récupération des données GDACS : ${error.message}`,
+        );
         throw new Error(
           `Erreur lors de la récupération des données GDACS : ${error.message}`,
         );

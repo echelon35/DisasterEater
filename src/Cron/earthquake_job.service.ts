@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { forkJoin, map, Observable } from 'rxjs';
 import { EarthquakeEaterService } from 'src/Application/earthquake_eater.service';
 import { GdacsService } from 'src/Application/gdacs.service';
@@ -14,7 +14,6 @@ export class EarthquakeJob {
     private readonly earthquakeEaterService: EarthquakeEaterService,
   ) {}
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
   @Cron('0 */3 * * * *')
   getAllEarthquakeData(): Observable<Earthquake[]> {
     console.log("Let's search some earthquakes");
