@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { forkJoin, map, Observable } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { EarthquakeEaterService } from 'src/Application/earthquake_eater.service';
 import { GdacsService } from 'src/Application/gdacs.service';
 import { UsgsService } from 'src/Application/usgs.service';
@@ -14,23 +14,29 @@ export class EarthquakeJob {
     private readonly earthquakeEaterService: EarthquakeEaterService,
   ) {}
 
+  //All 3 minutes
   @Cron('0 */3 * * * *')
-  getAllEarthquakeData(): Observable<Earthquake[]> {
+  async getAllEarthquakeData(): Promise<Earthquake[]> {
     console.log("Let's search some earthquakes");
-    return forkJoin({
-      gdacs: this.gdacsService.getEarthquakeData(),
-      usgs: this.usgsService.getEarthquakeData(),
-    }).pipe(
-      map((results) => {
-        // Combine results from both sources
-        const combinedData = [...results.gdacs, ...results.usgs];
 
-        this.earthquakeEaterService.bulkRecord(combinedData);
+    try {
+      const [gdacsData, usgsData] = await Promise.all([
+        lastValueFrom(this.gdacsService.getEarthquakeData()),
+        lastValueFrom(this.usgsService.getEarthquakeData()),
+      ]);
+      const combinedData = [...gdacsData, ...usgsData];
 
-        console.log(combinedData.length + 'séismes trouvés.');
+      await this.earthquakeEaterService.bulkRecord(combinedData);
 
-        return combinedData;
-      }),
-    );
+      console.log(combinedData.length + ' séismes trouvés.');
+
+      return combinedData;
+    } catch (error) {
+      console.error(
+        'Erreur lors de la récupération des données des séismes : ',
+        error,
+      );
+      throw new Error('Failed to retrieve earthquake data');
+    }
   }
 }

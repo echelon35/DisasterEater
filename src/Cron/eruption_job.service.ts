@@ -1,8 +1,8 @@
 import { GdacsService } from '../Application/gdacs.service';
-import { forkJoin, map, Observable } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { Eruption } from 'src/Domain/Model/eruption.model';
 import { EruptionEaterService } from 'src/Application/eruption_eater.service';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -12,20 +12,28 @@ export class EruptionJob {
     private readonly eruptionEaterService: EruptionEaterService,
   ) {}
 
-  @Cron(CronExpression.EVERY_30_MINUTES)
-  getAllEruptionData(): Observable<Eruption[]> {
+  //All 15 minutes
+  @Cron('0 */15 * * * *')
+  async getAllEruptionData(): Promise<Eruption[]> {
     console.log("Let's search some eruptions");
-    return forkJoin({
-      gdacs: this.gdacsService.getEruptionData(),
-    }).pipe(
-      map((results) => {
-        // Combine results from both sources
-        const combinedData = [...results.gdacs];
-        console.log(combinedData.length + 'éruptions trouvées.');
 
-        this.eruptionEaterService.bulkRecord(combinedData);
-        return combinedData;
-      }),
-    );
+    try {
+      const [gdacsData] = await Promise.all([
+        lastValueFrom(this.gdacsService.getEruptionData()),
+      ]);
+      const combinedData = [...gdacsData];
+
+      await this.eruptionEaterService.bulkRecord(combinedData);
+
+      console.log(combinedData.length + ' éruptions volcaniques trouvées.');
+
+      return combinedData;
+    } catch (error) {
+      console.error(
+        'Erreur lors de la récupération des données des éruptions : ',
+        error,
+      );
+      throw new Error('Failed to retrieve eruption data');
+    }
   }
 }

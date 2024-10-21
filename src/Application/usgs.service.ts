@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
-import { Observable, catchError, map, tap, timeout } from 'rxjs';
+import { Observable, catchError, map, tap } from 'rxjs';
 import { Earthquake } from 'src/Domain/Model/earthquake.model';
 import * as moment from 'moment';
 import { Source } from 'src/Domain/Model/source.model';
@@ -37,8 +37,8 @@ export class UsgsService {
 
     if (this.source == null) {
       const log = `Warning, it seems that there\'s no source corresponding to ${this.sourceName} _
-        hurricane list from ${this.sourceName} will be empty`;
-      this.cloudWatchService.logToCloudWatch('Hurricane', log);
+        earthquake list from ${this.sourceName} will be empty`;
+      this.cloudWatchService.logToCloudWatch('Earthquake', log);
       console.log(log);
       return seismeList;
     }

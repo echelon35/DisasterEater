@@ -1,10 +1,8 @@
-# Build container from code
+#Build container from github package
 services:
   server:
     container_name: disaster_eater
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/echelon35/disastereater:latest
     env_file:
       - ./.env.prod
     environment:

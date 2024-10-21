@@ -255,7 +255,6 @@ export class GdacsService {
   getEarthquakeData(): Observable<Earthquake[]> {
     const apiUrl =
       'https://www.gdacs.org/gdacsapi/api/events/geteventlist/MAP?eventtypes=EQ';
-    console.log(apiUrl);
 
     return this.httpService.get(apiUrl, { timeout: 30000 }).pipe(
       tap(() => console.log('Appel HTTP envoyé avec succès')),

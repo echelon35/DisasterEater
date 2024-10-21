@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { GdacsService } from '../Application/gdacs.service';
 import { Hurricane } from '../Domain/Model/hurricane.model';
-import { Observable, forkJoin, map } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { HurricaneEaterService } from 'src/Application/hurricane_eater.service';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class HurricaneJob {
@@ -12,21 +12,28 @@ export class HurricaneJob {
     private readonly hurricaneEaterService: HurricaneEaterService,
   ) {}
 
-  @Cron(CronExpression.EVERY_30_MINUTES)
-  getAllHurricaneData(): Observable<Hurricane[]> {
+  //All 18 minutes
+  @Cron('0 */18 * * * *')
+  async getAllHurricaneData(): Promise<Hurricane[]> {
     console.log("Let's search some hurricanes");
-    return forkJoin({
-      gdacs: this.gdacsService.getHurricaneData(),
-    }).pipe(
-      map((results) => {
-        // Combine results from both sources
-        const combinedData = [...results.gdacs];
 
-        console.log(combinedData.length + 'cyclones trouvés.');
-        this.hurricaneEaterService.bulkRecord(combinedData);
+    try {
+      const [gdacsData] = await Promise.all([
+        lastValueFrom(this.gdacsService.getHurricaneData()),
+      ]);
+      const combinedData = [...gdacsData];
 
-        return combinedData;
-      }),
-    );
+      await this.hurricaneEaterService.bulkRecord(combinedData);
+
+      console.log(combinedData.length + ' cyclones trouvés.');
+
+      return combinedData;
+    } catch (error) {
+      console.error(
+        'Erreur lors de la récupération des données des cyclones : ',
+        error,
+      );
+      throw new Error('Failed to retrieve hurricane data');
+    }
   }
 }

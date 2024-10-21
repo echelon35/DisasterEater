@@ -1,5 +1,5 @@
 import { GdacsService } from '../Application/gdacs.service';
-import { forkJoin, map, Observable } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { Flood } from 'src/Domain/Model/flood.model';
 import { FloodEaterService } from 'src/Application/flood_eater.service';
 import { Cron } from '@nestjs/schedule';
@@ -12,21 +12,28 @@ export class FloodJob {
     private readonly floodEaterService: FloodEaterService,
   ) {}
 
-  @Cron('0 */20 * * * *')
-  getAllInondationData(): Observable<Flood[]> {
+  //All 13 minutes
+  @Cron('0 */13 * * * *')
+  async getAllInondationData(): Promise<Flood[]> {
     console.log("Let's search some floods");
-    return forkJoin({
-      gdacs: this.gdacsService.getFloodData(),
-    }).pipe(
-      map((results) => {
-        // Combine results from both sources
-        const combinedData = [...results.gdacs];
-        console.log(combinedData.length + 'inondations trouvées.');
 
-        this.floodEaterService.bulkRecord(combinedData);
+    try {
+      const [gdacsData] = await Promise.all([
+        lastValueFrom(this.gdacsService.getFloodData()),
+      ]);
+      const combinedData = [...gdacsData];
 
-        return combinedData;
-      }),
-    );
+      await this.floodEaterService.bulkRecord(combinedData);
+
+      console.log(combinedData.length + ' inondations trouvées.');
+
+      return combinedData;
+    } catch (error) {
+      console.error(
+        'Erreur lors de la récupération des données des inondations : ',
+        error,
+      );
+      throw new Error('Failed to retrieve flood data');
+    }
   }
 }
