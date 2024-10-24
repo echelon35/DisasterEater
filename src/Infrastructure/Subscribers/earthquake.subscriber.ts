@@ -36,12 +36,6 @@ export class EarthquakeSubscriber
           'Earthquake',
           `Updated Earthquake M${earthquake.magnitude} dated from ${earthquake.premier_releve}`,
         );
-        //Send to queue
-        this.notifierService.sendNotificationToSQS({
-          type: InsertType.UPDATE,
-          disaster_type: 'earthquake',
-          disaster: new DisasterToSendToSQS(earthquake),
-        });
       } else {
         this.cloudWatchService.logToCloudWatch(
           'Earthquake',
