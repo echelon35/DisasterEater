@@ -54,7 +54,7 @@ export class GdacsService {
         seisme.source = this.source;
         //No data from GDACS for felt
         seisme.nb_ressenti = 0;
-        seisme.lien_source = element.properties?.url?.details;
+        seisme.lien_source = element.properties?.url?.report;
         seisme.point = element.geometry;
         seismeList.push(seisme);
       });
@@ -96,7 +96,7 @@ export class GdacsService {
         inondation.point = element.geometry;
         inondation.idFromSource = element.properties?.eventid?.toString();
         inondation.source = this.source;
-        inondation.lien_source = element.properties?.url?.details;
+        inondation.lien_source = element.properties?.url?.report;
         inondationList.push(inondation);
       });
 
@@ -145,6 +145,7 @@ export class GdacsService {
         eruption.point = element.geometry;
         eruption.idFromSource = element.properties?.eventid?.toString();
         eruption.source = this.source;
+        eruption.lien_source = element.properties?.url?.report;
         volcanoesList.push(eruption);
       });
 
@@ -184,7 +185,7 @@ export class GdacsService {
         hurricane.premier_releve = new Date(element.properties?.fromdate + 'Z');
         hurricane.point = element.geometry;
         hurricane.idFromSource = element.properties?.eventid?.toString();
-        hurricane.lien_source = element.properties?.url?.details;
+        hurricane.lien_source = element.properties?.url?.report;
         hurricane.source = this.source;
         hurricane.name = element.properties?.eventname;
         hurricanesList.push(hurricane);
